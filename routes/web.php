@@ -35,5 +35,5 @@ Route::middleware(['role:admin'])->group(function () {
 });
 
 Route::middleware(['role:user'])->group(function () {
-    Route::get('/user/dashboard', User\Dashboard::class)->name('user.dashboard');
+    Route::get('/user/dashboard', User\Main::class)->name('user.dashboard');
 });

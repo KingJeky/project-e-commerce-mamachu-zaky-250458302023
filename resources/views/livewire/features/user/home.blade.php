@@ -38,47 +38,53 @@
     </section>
 
     <section id="brands" class="py-24 bg-white border-y border-gray-100">
-        <div class="container mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl font-heading font-bold text-pop-dark mb-4">
-                    Partner <span class="text-pop-primary">Brand</span>
-                </h2>
-                <p class="text-gray-600 max-w-xl mx-auto">Kami bekerja sama dengan brand minuman terbaik dunia.</p>
-            </div>
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-heading font-bold text-pop-dark mb-4">
+                Partner <span class="text-pop-primary">Brand</span>
+            </h2>
+            <p class="text-gray-600 max-w-xl mx-auto">Kami bekerja sama dengan brand minuman terbaik dunia.</p>
+        </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-                @forelse ($brands as $brand)
-                    <div
-                        class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300
-                           text-center border-2 border-transparent hover:border-red-500 cursor-pointer relative overflow-hidden">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+            @forelse ($brands as $brand)
+                <div
+                    class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300
+                       text-center border-2 border-transparent hover:border-red-500 cursor-pointer relative overflow-hidden">
 
-                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
 
-                        <div class="relative z-10">
-                            <div
-                                class="w-24 h-24 rounded-full mx-auto mb-6 overflow-hidden shadow-md bg-white
-                                   flex items-center justify-center border-4 border-red-100 group-hover:rotate-6 transition">
+                    <div class="relative z-10">
 
-                                @if ($brand->logo)
-                                    <img src="{{ asset('storage/' . $brand->logo) }}"
-                                        class="w-full h-full object-contain p-2 opacity-80">
-                                @else
-                                    <span class="text-gray-400">No Image</span>
-                                @endif
-                            </div>
+                        <!-- FIXED: Ikuti style kategori -->
+                        <div
+                            class="w-24 h-24 rounded-full mx-auto mb-6 overflow-hidden shadow-md group-hover:rotate-6 transition border-4 border-white">
 
-                            <h3 class="font-bold text-xl text-gray-800 mb-2">{{ $brand->name }}</h3>
-                            <p class="text-sm text-gray-500 bg-red-50 inline-block px-3 py-1 rounded-full">Official
-                                Partner</p>
+                            @if ($brand->image)
+                                <img
+                                    src="{{ asset('storage/' . $brand->image) }}"
+                                    class="w-full h-full object-cover"
+                                >
+                            @else
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                    <span class="text-gray-400 text-xs text-center">No Image</span>
+                                </div>
+                            @endif
+
                         </div>
 
+                        <h3 class="font-bold text-xl text-gray-800 mb-2">{{ $brand->name }}</h3>
+                        <p class="text-sm text-gray-500 bg-red-50 inline-block px-3 py-1 rounded-full">Official Partner</p>
                     </div>
-                @empty
-                    <p class="text-center col-span-4 text-gray-600">No brands found.</p>
-                @endforelse
-            </div>
+
+                </div>
+            @empty
+                <p class="text-center col-span-4 text-gray-600">No brands found.</p>
+            @endforelse
         </div>
-    </section>
+    </div>
+</section>
+
 
 
     <section id="categories" class="py-24 bg-pop-light">
@@ -105,7 +111,7 @@
                             <div
                                 class="w-24 h-24 rounded-full mx-auto mb-6 overflow-hidden shadow-md group-hover:rotate-6 transition border-4 border-white">
 
-                                <img src="{{ $category->image_url ?? 'https://via.placeholder.com/200' }}"
+                                <img src="{{ asset('storage/' . $category->image) }}"
                                     class="w-full h-full object-cover">
                             </div>
 
@@ -146,13 +152,15 @@
 
                         <div
                             class="h-60 flex items-center justify-center mb-6 overflow-hidden rounded-2xl bg-gray-50 relative">
-                            <img src="{{ asset('storage/' . $product->image) }}"
-                                class="h-full w-full object-cover relative z-10 group-hover:scale-110 transition duration-500">
+                            @if (!empty($product->images))
+                                <img src="{{ asset('storage/' . $product->images[0]) }}"
+                                    alt="{{ $product->name }}"
+                                    class="h-full w-full object-cover relative z-10 group-hover:scale-110 transition duration-500">
+                            @endif
                         </div>
 
                         <p class="text-gray-400 text-sm font-bold uppercase mb-2">Kategori:
-                            {{ $product->category->name }}</p>
-
+                            {{ $product->category->name }}
                         <h3 class="font-heading font-bold text-2xl text-gray-800 mb-2 leading-tight">
                             {{ $product->name }}
                         </h3>
