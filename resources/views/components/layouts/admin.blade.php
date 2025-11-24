@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-`
+    `
     @livewire('auth.logout')
 
     <script src="{{ asset('mazer/assets/static/js/components/dark.js') }}"></script>
@@ -71,7 +71,32 @@
             });
         });
     </script>
-     @stack('scripts')
+
+    {{-- Session Error Handling --}}
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#dc3545',
+            });
+        </script>
+    @endif
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+        </script>
+    @endif
+
+    @stack('scripts')
 </body>
 
 </html>

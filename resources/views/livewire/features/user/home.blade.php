@@ -20,10 +20,17 @@
                     jus buah alami, semua siap diantar dingin ke tempatmu.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="{{ route('user.main') }}"
-                        class="bg-pop-primary hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 flex items-center justify-center">
-                        Belanja Sekarang <i class="fa-solid fa-cart-flatbed ml-3"></i>
-                    </a>
+                    @auth
+                        <a href="{{ route('user.main') }}"
+                            class="bg-pop-primary hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 flex items-center justify-center">
+                            Belanja Sekarang <i class="fa-solid fa-cart-flatbed ml-3"></i>
+                        </a>
+                    @else
+                        <button onclick="showLoginAlert()"
+                            class="bg-pop-primary hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 flex items-center justify-center">
+                            Belanja Sekarang <i class="fa-solid fa-cart-flatbed ml-3"></i>
+                        </button>
+                    @endauth
                 </div>
             </div>
 
@@ -230,3 +237,31 @@
         </div>
     </section>
 </div>
+
+@push('scripts')
+    <script>
+        function showLoginAlert() {
+            Swal.fire({
+                title: 'Login Diperlukan',
+                text: 'Silakan login terlebih dahulu untuk mulai berbelanja!',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#FF6B6B',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: '<i class="fa-solid fa-right-to-bracket mr-2"></i> Login Sekarang',
+                cancelButtonText: 'Nanti Saja',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'font-body',
+                    title: 'font-heading',
+                    confirmButton: 'font-semibold',
+                    cancelButton: 'font-semibold'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '{{ route('login') }}';
+                }
+            });
+        }
+    </script>
+@endpush

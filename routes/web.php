@@ -31,6 +31,18 @@ Route::prefix('auth')
         })->name('logout');
     });
 
+// Public Brands Page
+Route::get('/brands', User\Brands::class)->name('brands');
+
+// Public Categories Page
+Route::get('/categories', User\Categories::class)->name('categories');
+
+// Public Featured Products Page
+Route::get('/featured', User\FeaturedProducts::class)->name('featured');
+
+// Product Detail Page
+Route::get('/product/{slug}', User\ProductDetail::class)->name('product.detail');
+
 Route::middleware(['role:admin'])->group(function () {
     Route::get('/admin/dashboard', Admin\Dashboard::class)->name('admin.dashboard');
     Route::get('/admin/categories', Categories\Index::class)->name('admin.categories');
@@ -44,4 +56,5 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/user/main', User\Main::class)->name('user.main');
     Route::get('/user/profile', User\Profile::class)->name('user.profile');
     Route::get('/user/addresses', User\Addresses::class)->name('user.addresses');
+    Route::get('/user/cart', User\CartPage::class)->name('user.cart');
 });

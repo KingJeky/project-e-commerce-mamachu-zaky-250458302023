@@ -84,18 +84,22 @@
 
             <div class="hidden md:flex space-x-8 font-semibold text-gray-600">
                 <a href="{{ route('home') }}" class="hover:text-pop-primary transition">Beranda</a>
-                <a href="#categories" class="hover:text-pop-primary transition">Kategori</a>
-                <a href="#brands" class="hover:text-pop-primary transition">Brand</a>
-                <a href="#products" class="hover:text-pop-primary transition">Unggulan</a>
+                <a href="{{ route('categories') }}" class="hover:text-pop-primary transition">Kategori</a>
+                <a href="{{ route('brands') }}" class="hover:text-pop-primary transition">Brand</a>
+                <a href="{{ route('featured') }}" class="hover:text-pop-primary transition">Unggulan</a>
                 <a href="#about" class="hover:text-pop-primary transition">Tentang</a>
             </div>
 
             <div class="hidden md:flex items-center space-x-6">
-                <a href="#" class="relative text-gray-600 hover:text-pop-primary transition group">
-                    <i class="fa-solid fa-cart-shopping text-xl"></i>
-                    <span
-                        class="absolute -top-2 -right-2 bg-pop-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center group-hover:scale-110 transition">3</span>
-                </a>
+                @auth
+                    @livewire('components.cart-counter')
+                @else
+                    <a href="{{ route('login') }}" class="relative text-gray-600 hover:text-pop-primary transition group">
+                        <i class="fa-solid fa-cart-shopping text-xl"></i>
+                        <span
+                            class="absolute -top-2 -right-2 bg-gray-400 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </a>
+                @endauth
 
                 @auth
                     <!-- Profile Dropdown -->
@@ -157,9 +161,9 @@
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t absolute w-full shadow-lg">
             <div class="flex flex-col px-6 py-4 space-y-4 font-semibold text-lg">
                 <a href="{{ route('home') }}" class="hover:text-pop-primary">Beranda</a>
-                <a href="#categories" class="hover:text-pop-primary">Kategori</a>
-                <a href="#brands" class="hover:text-pop-primary">Brand</a>
-                <a href="#products" class="hover:text-pop-primary">Unggulan</a>
+                <a href="{{ route('categories') }}" class="hover:text-pop-primary">Kategori</a>
+                <a href="{{ route('brands') }}" class="hover:text-pop-primary">Brand</a>
+                <a href="{{ route('featured') }}" class="hover:text-pop-primary">Unggulan</a>
                 <a href="#about" class="hover:text-pop-primary">Tentang</a>
                 <hr class="border-gray-200">
                 <a href="#" class="flex items-center gap-2 text-gray-600">
@@ -370,6 +374,31 @@
             }, 3000);
         }
     </script>
+
+    {{-- Session Error Handling --}}
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#FF6B6B',
+            });
+        </script>
+    @endif
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: '{{ session('success') }}',
+                timer: 2000,
+                showConfirmButton: false,
+            });
+        </script>
+    @endif
+
     @stack('scripts')
 </body>
 
