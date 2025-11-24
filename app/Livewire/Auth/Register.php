@@ -38,7 +38,7 @@ class Register extends Component
             return redirect()->route('admin.dashboard');
         }
 
-        return redirect()->intended('/');
+        return redirect()->intended(route('user.main'));
     }
 
     public function render()

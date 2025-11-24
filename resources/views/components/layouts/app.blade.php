@@ -45,6 +45,7 @@
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #FF6B6B; border-radius: 10px; }
     </style>
+    @stack('styles')
 </head>
 <body class="font-body bg-pop-light text-pop-dark overflow-x-hidden">
 
@@ -173,5 +174,6 @@
             }, 3000);
         }
     </script>
+    @stack('scripts')
 </body>
 </html>

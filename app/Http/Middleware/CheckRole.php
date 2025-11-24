@@ -24,7 +24,7 @@ class CheckRole
         if (!in_array($userRole, $roles)) {
             $redirects = [
                 'admin' => '/admin/dashboard',
-                'user' => '/user/dashboard',
+                'user' => '/user/main',
             ];
 
             return redirect($redirects[$userRole] ?? '/');

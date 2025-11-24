@@ -31,7 +31,7 @@ class Login extends Component
                 return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->intended('/');
+            return redirect()->intended(route('user.main'));
         }
 
         $this->addError('email', 'The provided credentials do not match our records.');
