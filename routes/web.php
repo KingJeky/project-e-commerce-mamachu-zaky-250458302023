@@ -16,13 +16,19 @@ use App\Livewire\Features\User\Home;
 // });
 
 // Tambahkan rute baru yang menunjuk ke komponen Livewire 'Home'
-Route::get('/', Home::class);
+Route::get('/', Home::class)->name('home');
 
 // Rute-rute lain yang sudah ada
 Route::prefix('auth')
     ->group(function () {
         Route::get('/login', Auth\Login::class)->name('login');
         Route::get('/register', Auth\Register::class)->name('register');
+        Route::post('/logout', function () {
+            \Illuminate\Support\Facades\Auth::logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+            return redirect('/');
+        })->name('logout');
     });
 
 Route::middleware(['role:admin'])->group(function () {
@@ -36,4 +42,6 @@ Route::middleware(['role:admin'])->group(function () {
 
 Route::middleware(['role:user'])->group(function () {
     Route::get('/user/main', User\Main::class)->name('user.main');
+    Route::get('/user/profile', User\Profile::class)->name('user.profile');
+    Route::get('/user/addresses', User\Addresses::class)->name('user.addresses');
 });

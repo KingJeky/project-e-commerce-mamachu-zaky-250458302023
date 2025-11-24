@@ -20,7 +20,7 @@
                     jus buah alami, semua siap diantar dingin ke tempatmu.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#products"
+                    <a href="{{ route('user.main') }}"
                         class="bg-pop-primary hover:bg-red-500 text-white px-8 py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 flex items-center justify-center">
                         Belanja Sekarang <i class="fa-solid fa-cart-flatbed ml-3"></i>
                     </a>
@@ -38,52 +38,51 @@
     </section>
 
     <section id="brands" class="py-24 bg-white border-y border-gray-100">
-    <div class="container mx-auto px-6">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl font-heading font-bold text-pop-dark mb-4">
-                Partner <span class="text-pop-primary">Brand</span>
-            </h2>
-            <p class="text-gray-600 max-w-xl mx-auto">Kami bekerja sama dengan brand minuman terbaik dunia.</p>
-        </div>
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-heading font-bold text-pop-dark mb-4">
+                    Partner <span class="text-pop-primary">Brand</span>
+                </h2>
+                <p class="text-gray-600 max-w-xl mx-auto">Kami bekerja sama dengan brand minuman terbaik dunia.</p>
+            </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            @forelse ($brands as $brand)
-                <div
-                    class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+                @forelse ($brands as $brand)
+                    <div
+                        class="group bg-white p-8 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all duration-300
                        text-center border-2 border-transparent hover:border-red-500 cursor-pointer relative overflow-hidden">
 
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 z-0"></div>
 
-                    <div class="relative z-10">
+                        <div class="relative z-10">
 
-                        <!-- FIXED: Ikuti style kategori -->
-                        <div
-                            class="w-24 h-24 rounded-full mx-auto mb-6 overflow-hidden shadow-md group-hover:rotate-6 transition border-4 border-white">
+                            <!-- FIXED: Ikuti style kategori -->
+                            <div
+                                class="w-24 h-24 rounded-full mx-auto mb-6 overflow-hidden shadow-md group-hover:rotate-6 transition border-4 border-white">
 
-                            @if ($brand->image)
-                                <img
-                                    src="{{ asset('storage/' . $brand->image) }}"
-                                    class="w-full h-full object-cover"
-                                >
-                            @else
-                                <div class="w-full h-full bg-gray-100 flex items-center justify-center">
-                                    <span class="text-gray-400 text-xs text-center">No Image</span>
-                                </div>
-                            @endif
+                                @if ($brand->image)
+                                    <img src="{{ asset('storage/' . $brand->image) }}"
+                                        class="w-full h-full object-cover">
+                                @else
+                                    <div class="w-full h-full bg-gray-100 flex items-center justify-center">
+                                        <span class="text-gray-400 text-xs text-center">No Image</span>
+                                    </div>
+                                @endif
 
+                            </div>
+
+                            <h3 class="font-bold text-xl text-gray-800 mb-2">{{ $brand->name }}</h3>
+                            <p class="text-sm text-gray-500 bg-red-50 inline-block px-3 py-1 rounded-full">Official
+                                Partner</p>
                         </div>
 
-                        <h3 class="font-bold text-xl text-gray-800 mb-2">{{ $brand->name }}</h3>
-                        <p class="text-sm text-gray-500 bg-red-50 inline-block px-3 py-1 rounded-full">Official Partner</p>
                     </div>
-
-                </div>
-            @empty
-                <p class="text-center col-span-4 text-gray-600">No brands found.</p>
-            @endforelse
+                @empty
+                    <p class="text-center col-span-4 text-gray-600">No brands found.</p>
+                @endforelse
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
 
@@ -134,13 +133,11 @@
         class="py-24 bg-white rounded-t-[4rem] -mt-12 z-10 relative shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
         <div class="container mx-auto px-6">
 
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-                <div>
-                    <h2 class="text-4xl font-heading font-bold text-pop-dark">
-                        Produk <span class="text-pop-primary">Unggulan</span>
-                    </h2>
-                    <p class="text-gray-500 mt-2 text-lg">Paling banyak dicari minggu ini di Mamachu!</p>
-                </div>
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-heading font-bold text-pop-dark mb-4">
+                    Produk <span class="text-pop-primary">Unggulan</span>
+                </h2>
+                <p class="text-gray-600 max-w-xl mx-auto">Paling banyak dicari minggu ini di Mamachu!</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -153,8 +150,7 @@
                         <div
                             class="h-60 flex items-center justify-center mb-6 overflow-hidden rounded-2xl bg-gray-50 relative">
                             @if (!empty($product->images))
-                                <img src="{{ asset('storage/' . $product->images[0]) }}"
-                                    alt="{{ $product->name }}"
+                                <img src="{{ asset('storage/' . $product->images[0]) }}" alt="{{ $product->name }}"
                                     class="h-full w-full object-cover relative z-10 group-hover:scale-110 transition duration-500">
                             @endif
                         </div>
@@ -170,7 +166,7 @@
                                 <span class="text-2xl font-black text-pop-primary">
                                     Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </span>
-{{-- {{ route('product.show', $product->slug) }} --}}
+                                {{-- {{ route('product.show', $product->slug) }} --}}
                                 <a href="#"
                                     class="bg-pop-dark text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-pop-primary hover:scale-110 transition shadow-lg">
                                     <i class="fa-solid fa-cart-plus text-lg"></i>
