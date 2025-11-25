@@ -77,6 +77,7 @@ class MyOrders extends Component
     {
         $labels = [
             'transfer' => 'Transfer Bank',
+            'midtrans' => 'Midtrans',
         ];
 
         return $labels[$method] ?? ucfirst($method);

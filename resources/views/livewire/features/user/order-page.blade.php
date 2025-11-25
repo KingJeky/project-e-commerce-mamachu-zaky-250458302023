@@ -131,18 +131,38 @@
                         </h3>
 
                         <div class="space-y-3">
+                            {{-- Transfer Bank --}}
                             <label
-                                class="flex items-center gap-4 p-4 rounded-xl border-2 border-pop-primary bg-red-50 cursor-pointer">
-                                <input type="radio" wire:model.live="paymentMethod" value="transfer" checked
+                                class="flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition
+                                {{ $paymentMethod == 'transfer' ? 'border-pop-primary bg-red-50' : 'border-gray-200 hover:border-gray-300' }}">
+                                <input type="radio" wire:model.live="paymentMethod" value="transfer"
                                     class="text-pop-primary focus:ring-pop-primary">
                                 <div class="flex-1">
                                     <div class="flex items-center gap-2">
                                         <i class="fa-solid fa-building-columns text-blue-600"></i>
                                         <span class="font-bold text-gray-800">Transfer Bank</span>
                                     </div>
-                                    <p class="text-sm text-gray-600 mt-1">Transfer ke rekening bank</p>
+                                    <p class="text-sm text-gray-600 mt-1">Transfer manual ke rekening bank</p>
                                 </div>
                             </label>
+
+                            {{-- Midtrans --}}
+                            <label
+                                class="flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition
+                                {{ $paymentMethod == 'midtrans' ? 'border-pop-primary bg-red-50' : 'border-gray-200 hover:border-gray-300' }}">
+                                <input type="radio" wire:model.live="paymentMethod" value="midtrans"
+                                    class="text-pop-primary focus:ring-pop-primary">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i class="fa-solid fa-credit-card text-purple-600"></i>
+                                        <span class="font-bold text-gray-800">Midtrans</span>
+                                        <span
+                                            class="bg-purple-100 text-purple-700 text-xs px-2 py-0.5 rounded-full font-semibold">Rekomendasi</span>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Credit Card, GoPay, QRIS, Virtual Account</p>
+                                </div>
+                            </label>
+
                             @error('paymentMethod')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror

@@ -18,6 +18,7 @@ class OrderPage extends Component
     public $selectedAddressId;
     public $paymentMethod = 'transfer';
     public $notes = '';
+    public $snapToken = null;
     
     public function mount()
     {
@@ -73,7 +74,7 @@ class OrderPage extends Component
         // Validate
         $this->validate([
             'selectedAddressId' => 'required|exists:addresses,id',
-            'paymentMethod' => 'required|in:transfer',
+            'paymentMethod' => 'required|in:transfer,midtrans',
             'notes' => 'nullable|string|max:500',
         ], [
             'selectedAddressId.required' => 'Silakan pilih alamat pengiriman',
@@ -105,6 +106,11 @@ class OrderPage extends Component
             'notes' => $this->notes,
         ]);
         
+        // Generate Midtrans Snap Token if using Midtrans
+        if ($this->paymentMethod == 'midtrans') {
+            $this->generateSnapToken($order);
+        }
+        
         // Create order items from cart items
         foreach ($this->cartItems as $cartItem) {
             OrderItem::create([
@@ -125,8 +131,58 @@ class OrderPage extends Component
         // Flash success message
         session()->flash('success', 'Pesanan berhasil dibuat! Order ID: #' . $order->id);
         
-        // Redirect to my orders page
-        return redirect()->route('user.my-orders');
+        // Redirect based on payment method
+        if ($this->paymentMethod == 'midtrans') {
+            return redirect()->route('user.midtrans-payment', ['orderId' => $order->id]);
+        } else {
+            return redirect()->route('user.my-orders');
+        }
+    }
+
+    private function generateSnapToken($order)
+    {
+        // Set Midtrans configuration
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+        \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+        // Prepare transaction details
+        $params = [
+            'transaction_details' => [
+                'order_id' => $order->id,
+                'gross_amount' => (int) $order->grand_total,
+            ],
+            'customer_details' => [
+                'first_name' => auth()->user()->name,
+                'email' => auth()->user()->email,
+            ],
+            'item_details' => [],
+            'callbacks' => [
+                'finish' => route('user.my-orders'),
+            ],
+        ];
+
+        // Add items
+        foreach ($order->items as $item) {
+            $params['item_details'][] = [
+                'id' => $item->product_id,
+                'price' => (int) $item->unit_amount,
+                'quantity' => $item->quantity,
+                'name' => $item->product->name,
+            ];
+        }
+
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $order->update(['snap_token' => $snapToken]);
+            $this->snapToken = $snapToken;
+        } catch (\Exception $e) {
+            $this->dispatch('swal:error', [
+                'title' => 'Gagal!',
+                'text' => 'Gagal generate token pembayaran: ' . $e->getMessage()
+            ]);
+        }
     }
 
     #[Layout('components.layouts.app')]

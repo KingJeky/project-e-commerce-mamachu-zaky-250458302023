@@ -161,11 +161,21 @@
                                     <div class="flex gap-3">
                                         {{-- Pay Now Button for Pending Payment --}}
                                         @if ($order->payment_status == 'pending')
-                                            <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
-                                                class="flex-1 bg-pop-primary hover:bg-red-500 text-white py-3 rounded-full font-bold text-center shadow-lg shadow-red-200 transition transform hover:-translate-y-1">
-                                                <i class="fa-solid fa-money-bill-transfer mr-2"></i>
-                                                Bayar Sekarang
-                                            </a>
+                                            @if ($order->payment_method == 'midtrans')
+                                                {{-- Midtrans Payment --}}
+                                                <a href="{{ route('user.midtrans-payment', ['orderId' => $order->id]) }}"
+                                                    class="flex-1 bg-pop-primary hover:bg-red-500 text-white py-3 rounded-full font-bold text-center shadow-lg shadow-red-200 transition transform hover:-translate-y-1">
+                                                    <i class="fa-solid fa-credit-card mr-2"></i>
+                                                    Bayar dengan Midtrans
+                                                </a>
+                                            @else
+                                                {{-- Transfer Bank Payment --}}
+                                                <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
+                                                    class="flex-1 bg-pop-primary hover:bg-red-500 text-white py-3 rounded-full font-bold text-center shadow-lg shadow-red-200 transition transform hover:-translate-y-1">
+                                                    <i class="fa-solid fa-money-bill-transfer mr-2"></i>
+                                                    Upload Bukti Bayar
+                                                </a>
+                                            @endif
                                         @endif
 
                                         {{-- Cancel Order Button (only for new orders with pending payment) --}}

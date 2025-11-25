@@ -23,15 +23,18 @@ class Index extends Component
     #[Rule('required|exists:users,id')]
     public $user_id;
 
-    #[Rule('required|in:pending,paid,cancelled')]
+    #[Rule('required|in:new,processing,shipped,delivered,cancelled')]
     public $status;
+
+    #[Rule('required|in:pending,paid,failed,refunded')]
+    public $payment_status;
 
     #[Rule('required|numeric')]
     public $grand_total;
 
     public function create()
     {
-        $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'grand_total']);
+        $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
         $this->is_edit_mode = false;
         $this->dispatch('show-modal');
     }
@@ -45,6 +48,7 @@ class Index extends Component
             $order->update([
                 'user_id' => $this->user_id,
                 'status' => $this->status,
+                'payment_status' => $this->payment_status,
                 'grand_total' => $this->grand_total,
             ]);
             $this->dispatch('show-notification', [
@@ -55,6 +59,7 @@ class Index extends Component
             Order::create([
                 'user_id' => $this->user_id,
                 'status' => $this->status,
+                'payment_status' => $this->payment_status,
                 'grand_total' => $this->grand_total,
             ]);
             $this->dispatch('show-notification', [
@@ -63,7 +68,7 @@ class Index extends Component
             ]);
         }
 
-        $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'grand_total']);
+        $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
         $this->dispatch('hide-modal');
     }
 
@@ -74,6 +79,7 @@ class Index extends Component
             $this->order_id = $order->id;
             $this->user_id = $order->user_id;
             $this->status = $order->status;
+            $this->payment_status = $order->payment_status;
             $this->grand_total = $order->grand_total;
             $this->is_edit_mode = true;
             $this->dispatch('show-modal');

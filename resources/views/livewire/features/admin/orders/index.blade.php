@@ -30,7 +30,8 @@
                                 <th>Customer</th>
                                 <th>Order Date</th>
                                 <th>Total</th>
-                                <th>Status</th>
+                                <th>Order Status</th>
+                                <th>Payment Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -42,9 +43,35 @@
                                     <td>{{ $order->created_at->format('d F Y') }}</td>
                                     <td>Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
                                     <td>
-                                        <span
-                                            class="badge bg-light-{{ strtolower($order->status) == 'paid' ? 'success' : (strtolower($order->status) == 'pending' ? 'warning' : 'danger') }}">
-                                            {{ ucfirst($order->status) }}
+                                        @php
+                                            $statusColors = [
+                                                'new' => 'info',
+                                                'processing' => 'primary',
+                                                'shipped' => 'warning',
+                                                'delivered' => 'success',
+                                                'cancelled' => 'danger',
+                                            ];
+                                            $statusColor =
+                                                $statusColors[strtolower($order->status ?? 'new')] ?? 'secondary';
+                                        @endphp
+                                        <span class="badge bg-light-{{ $statusColor }}">
+                                            {{ ucfirst($order->status ?? 'New') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @php
+                                            $paymentColors = [
+                                                'pending' => 'warning',
+                                                'paid' => 'success',
+                                                'failed' => 'danger',
+                                                'refunded' => 'info',
+                                            ];
+                                            $paymentColor =
+                                                $paymentColors[strtolower($order->payment_status ?? 'pending')] ??
+                                                'secondary';
+                                        @endphp
+                                        <span class="badge bg-light-{{ $paymentColor }}">
+                                            {{ ucfirst($order->payment_status ?? 'Pending') }}
                                         </span>
                                     </td>
                                     <td>
@@ -56,7 +83,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">No orders found.</td>
+                                    <td colspan="7" class="text-center">No orders found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

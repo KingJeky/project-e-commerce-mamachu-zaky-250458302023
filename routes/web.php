@@ -60,4 +60,9 @@ Route::middleware(['role:user'])->group(function () {
     Route::get('/user/order', User\OrderPage::class)->name('user.order');
     Route::get('/user/my-orders', User\MyOrders::class)->name('user.my-orders');
     Route::get('/user/payment/{orderId}', User\PaymentPage::class)->name('user.payment');
+    Route::get('/user/midtrans-payment/{orderId}', User\MidtransPayment::class)->name('user.midtrans-payment');
 });
+
+// Midtrans callback (no middleware, will be called by Midtrans server)
+Route::post('/midtrans/callback', [App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
+
