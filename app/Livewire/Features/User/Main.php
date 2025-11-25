@@ -49,6 +49,52 @@ class Main extends Component
         $this->resetPage();
     }
 
+    public function addToCart($productId)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        $product = Product::find($productId);
+        if (!$product || !$product->is_active) {
+            $this->dispatch('swal:error', [
+                'title' => 'Gagal!',
+                'text' => 'Produk tidak ditemukan atau tidak tersedia'
+            ]);
+            return;
+        }
+
+        // Get or create user's cart
+        $cart = \App\Models\Cart::firstOrCreate(
+            ['user_id' => auth()->id()]
+        );
+
+        // Check if product already in cart
+        $cartItem = \App\Models\CartItem::where('cart_id', $cart->id)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($cartItem) {
+            // Update quantity if item already exists
+            $cartItem->increment('quantity', 1);
+        } else {
+            // Create new cart item
+            \App\Models\CartItem::create([
+                'cart_id' => $cart->id,
+                'product_id' => $productId,
+                'quantity' => 1
+            ]);
+        }
+
+        $this->dispatch('swal:success', [
+            'title' => 'Berhasil!',
+            'text' => $product->name . ' ditambahkan ke keranjang'
+        ]);
+
+        // Dispatch event to update cart counter
+        $this->dispatch('cartUpdated')->to('components.cart-counter');
+    }
+
     public function render()
     {
         $productsQuery = Product::with(['category', 'brand'])->where('is_active', true);

@@ -126,7 +126,7 @@
                                     <i class="fa-solid fa-user-circle text-lg group-hover:scale-110 transition"></i>
                                     <span class="font-medium">My Profile</span>
                                 </a>
-                                <a href="#"
+                                <a href="{{ route('user.my-orders') }}"
                                     class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-pop-light hover:text-pop-primary transition group">
                                     <i class="fa-solid fa-shopping-bag text-lg group-hover:scale-110 transition"></i>
                                     <span class="font-medium">My Order</span>
@@ -189,7 +189,8 @@
                         <i class="fa-solid fa-user-circle text-xl"></i>
                         <span>My Profile</span>
                     </a>
-                    <a href="#" class="flex items-center gap-3 text-gray-700 hover:text-pop-primary transition">
+                    <a href="{{ route('user.my-orders') }}"
+                        class="flex items-center gap-3 text-gray-700 hover:text-pop-primary transition">
                         <i class="fa-solid fa-shopping-bag text-xl"></i>
                         <span>My Order</span>
                     </a>

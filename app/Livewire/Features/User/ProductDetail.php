@@ -64,6 +64,9 @@ class ProductDetail extends Component
             'text' => $this->product->name . ' ditambahkan ke keranjang (' . $this->quantity . ' item)'
         ]);
 
+        // Dispatch event to update cart counter
+        $this->dispatch('cartUpdated')->to('components.cart-counter');
+
         // Reset quantity
         $this->quantity = 1;
     }

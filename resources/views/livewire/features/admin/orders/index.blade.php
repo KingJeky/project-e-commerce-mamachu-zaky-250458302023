@@ -18,7 +18,8 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <input wire:model.live.debounce.300ms="search" type="text" class="form-control" placeholder="Search orders by customer name or order ID...">
+                    <input wire:model.live.debounce.300ms="search" type="text" class="form-control"
+                        placeholder="Search orders by customer name or order ID...">
                 </div>
 
                 <div class="table-responsive">
@@ -41,13 +42,16 @@
                                     <td>{{ $order->created_at->format('d F Y') }}</td>
                                     <td>Rp {{ number_format($order->grand_total, 0, ',', '.') }}</td>
                                     <td>
-                                        <span class="badge bg-light-{{ strtolower($order->status) == 'paid' ? 'success' : (strtolower($order->status) == 'pending' ? 'warning' : 'danger') }}">
+                                        <span
+                                            class="badge bg-light-{{ strtolower($order->status) == 'paid' ? 'success' : (strtolower($order->status) == 'pending' ? 'warning' : 'danger') }}">
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </td>
                                     <td>
-                                        <button wire:click="edit({{ $order->id }})" class="btn btn-primary btn-sm">Edit</button>
-                                        <button wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })" class="btn btn-danger btn-sm">Delete</button>
+                                        <button wire:click="edit({{ $order->id }})"
+                                            class="btn btn-primary btn-sm">Edit</button>
+                                        <button wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })"
+                                            class="btn btn-danger btn-sm">Delete</button>
                                     </td>
                                 </tr>
                             @empty
@@ -85,7 +89,9 @@
             });
 
             // Listener untuk konfirmasi hapus
-            Livewire.on('delete-prompt', ({ id }) => {
+            Livewire.on('delete-prompt', ({
+                id
+            }) => {
                 Swal.fire({
                     title: 'Are you sure?',
                     text: "You won't be able to revert this!",

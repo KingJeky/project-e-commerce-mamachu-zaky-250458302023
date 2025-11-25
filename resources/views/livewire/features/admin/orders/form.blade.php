@@ -1,4 +1,5 @@
-<div class="modal fade" id="form-modal" tabindex="-1" aria-labelledby="form-modal-label" aria-hidden="true" wire:ignore.self>
+<div class="modal fade" id="form-modal" tabindex="-1" aria-labelledby="form-modal-label" aria-hidden="true"
+    wire:ignore.self>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +12,8 @@
                 <form wire:submit.prevent="store">
                     <div class="mb-3">
                         <label for="user_id" class="form-label">Customer</label>
-                        <select class="form-select @error('user_id') is-invalid @enderror" id="user_id" wire:model="user_id">
+                        <select class="form-select @error('user_id') is-invalid @enderror" id="user_id"
+                            wire:model="user_id">
                             <option value="">Select Customer</option>
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -24,21 +26,39 @@
 
                     <div class="mb-3">
                         <label for="grand_total" class="form-label">Grand Total</label>
-                        <input type="number" class="form-control @error('grand_total') is-invalid @enderror" id="grand_total" wire:model="grand_total">
+                        <input type="number" class="form-control @error('grand_total') is-invalid @enderror"
+                            id="grand_total" wire:model="grand_total">
                         @error('grand_total')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select @error('status') is-invalid @enderror" id="status" wire:model="status">
+                        <label for="status" class="form-label">Order Status</label>
+                        <select class="form-select @error('status') is-invalid @enderror" id="status"
+                            wire:model="status">
                             <option value="">Select Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="paid">Paid</option>
+                            <option value="new">New</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
                         @error('status')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="payment_status" class="form-label">Payment Status</label>
+                        <select class="form-select @error('payment_status') is-invalid @enderror" id="payment_status"
+                            wire:model="payment_status">
+                            <option value="">Select Payment Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="paid">Paid</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        @error('payment_status')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
@@ -54,5 +74,3 @@
         </div>
     </div>
 </div>
-
-

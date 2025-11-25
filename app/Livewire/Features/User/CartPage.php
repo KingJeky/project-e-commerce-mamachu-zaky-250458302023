@@ -45,6 +45,9 @@ class CartPage extends Component
                 'title' => 'Berhasil!',
                 'text' => 'Jumlah item diupdate'
             ]);
+
+            // Dispatch event to update cart counter
+            $this->dispatch('cartUpdated')->to('components.cart-counter');
         }
     }
 
@@ -60,6 +63,9 @@ class CartPage extends Component
                 'title' => 'Dihapus!',
                 'text' => $productName . ' telah dihapus dari keranjang'
             ]);
+
+            // Dispatch event to update cart counter
+            $this->dispatch('cartUpdated')->to('components.cart-counter');
         }
     }
 
@@ -73,6 +79,9 @@ class CartPage extends Component
                 'title' => 'Keranjang Dikosongkan!',
                 'text' => 'Semua item telah dihapus'
             ]);
+
+            // Dispatch event to update cart counter
+            $this->dispatch('cartUpdated')->to('components.cart-counter');
         }
     }
 

@@ -10,7 +10,7 @@ class CartCounter extends Component
 {
     public $cartCount = 0;
 
-    protected $listeners = ['cartUpdated' => '$refresh'];
+    protected $listeners = ['cartUpdated' => 'updateCartCount'];
 
     public function mount()
     {

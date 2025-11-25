@@ -122,11 +122,11 @@
                                 </div>
                             </div>
 
-                            <button
-                                class="w-full bg-pop-primary hover:bg-red-500 text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 mb-3">
+                            <a href="{{ route('user.order') }}"
+                                class="w-full bg-pop-primary hover:bg-red-500 text-white py-4 rounded-full font-bold text-lg shadow-lg shadow-red-200 transition transform hover:-translate-y-1 mb-3 block text-center">
                                 <i class="fa-solid fa-credit-card mr-2"></i>
                                 Lanjut ke Pembayaran
-                            </button>
+                            </a>
 
                             <a href="{{ route('user.main') }}"
                                 class="block text-center text-pop-primary hover:text-red-500 font-semibold transition">

@@ -10,8 +10,8 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'grand_total', 'payment_method', 'payment_status', 'status',
-        'currency', 'shipping_amount', 'shipping_method', 'notes'
+        'user_id', 'address_id', 'grand_total', 'payment_method', 'payment_status', 
+        'status', 'currency', 'shipping_amount', 'shipping_method', 'notes', 'payment_proof'
     ];
 
     public function user()
@@ -26,6 +26,6 @@ class Order extends Model
 
     public function address()
     {
-        return $this->hasOne(Address::class);
+        return $this->belongsTo(Address::class);
     }
 }
