@@ -23,11 +23,8 @@
             <div class="card-body">
 
                 @if (session()->has('message'))
-                    <div x-data="{ show: true }"
-                         x-init="setTimeout(() => show = false, 2000)"
-                         x-show="show"
-                         class="alert alert-success alert-dismissible fade show"
-                         role="alert">
+                    <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 2000)" x-show="show"
+                        class="alert alert-success alert-dismissible fade show" role="alert">
                         {{ session('message') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
@@ -38,56 +35,53 @@
                 @endif
 
                 <div class="mb-3">
-                    <input wire:model.live.debounce.300ms="search"
-                           type="text"
-                           class="form-control"
-                           placeholder="Search categories by name...">
+                    <input wire:model.live.debounce.300ms="search" type="text" class="form-control"
+                        placeholder="Search categories by name...">
                 </div>
 
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Slug</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
+                            <tr>
+                                <th>No</th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Slug</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
                         </thead>
 
                         <tbody>
-                        @forelse ($categories as $index => $category)
-                            <tr>
-                                <td>{{ $categories->firstItem() + $index }}</td>
+                            @forelse ($categories as $index => $category)
+                                <tr>
+                                    <td>{{ $categories->firstItem() + $index }}</td>
 
-                                <td>
-                                    @if ($category->image)
-                                        <img src="{{ asset('storage/' . $category->image) }}"
-                                             width="60"
-                                             class="rounded">
-                                    @else
-                                        <span class="text-muted">No Image</span>
-                                    @endif
-                                </td>
+                                    <td>
+                                        @if ($category->image)
+                                            <img src="{{ asset('storage/' . $category->image) }}" width="60"
+                                                class="rounded">
+                                        @else
+                                            <span class="text-muted">No Image</span>
+                                        @endif
+                                    </td>
 
-                                <td>{{ $category->name }}</td>
-                                <td>{{ $category->slug }}</td>
+                                    <td>{{ $category->name }}</td>
+                                    <td>{{ $category->slug }}</td>
 
-                                <td>
-                                    <span class="badge {{ $category->is_active ? 'bg-success' : 'bg-danger' }}">
-                                        {{ $category->is_active ? 'Active' : 'Inactive' }}
-                                    </span>
-                                </td>
+                                    <td>
+                                        <span class="badge {{ $category->is_active ? 'bg-success' : 'bg-danger' }}">
+                                            {{ $category->is_active ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
 
-                                <td class="flex gap-2">
-                                    <button wire:click="edit({{ $category->id }})"
+                                    <td class="flex gap-2">
+                                        <button wire:click="edit({{ $category->id }})"
                                             class="btn btn-info flex items-center justify-center px-2 py-1 h-5">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
 
-                                    <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5"
+                                        <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5"
                                             x-data
                                             x-on:click.prevent="
                                                 Swal.fire({
@@ -104,22 +98,22 @@
                                                     }
                                                 });
                                             ">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No categories found.</td>
-                            </tr>
-                        @endforelse
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">No categories found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
 
                 {{-- Pagination FIX --}}
                 <div class="mt-3 d-flex justify-content-end">
-                    {{ $categories->links('vendor.pagination.bootstrap-5') }}
+                    {{ $categories->links() }}
                 </div>
 
             </div>

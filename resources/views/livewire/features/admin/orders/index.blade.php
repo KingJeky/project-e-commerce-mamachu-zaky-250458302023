@@ -95,7 +95,7 @@
                 </div>
 
                 <div class="mt-3 d-flex justify-content-end">
-                    {{ $orders->links('pagination::bootstrap-5') }}
+                    {{ $orders->links() }}
                 </div>
             </div>
         </div>

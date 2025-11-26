@@ -16,6 +16,7 @@ class Index extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    protected $paginationTheme = 'bootstrap';
 
     #[Layout('components.layouts.admin')]
     public $name, $slug, $description, $price, $product_id, $category_id, $brand_id;
@@ -23,6 +24,11 @@ class Index extends Component
     public $newImage1, $newImage2, $newImage3;
     public bool $is_active = true, $is_featured = false, $in_stock = true;
     public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public $isOpen = 0;
     public $viewingImages = [];
     public bool $showImageModal = false;
@@ -49,9 +55,18 @@ class Index extends Component
     public function render()
     {
         $products = Product::with(['category', 'brand'])
-            ->where('name', 'like', '%' . $this->search . '%')
+            ->where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('description', 'like', '%' . $this->search . '%')
+                      ->orWhereHas('category', function ($categoryQuery) {
+                          $categoryQuery->where('name', 'like', '%' . $this->search . '%');
+                      })
+                      ->orWhereHas('brand', function ($brandQuery) {
+                          $brandQuery->where('name', 'like', '%' . $this->search . '%');
+                      });
+            })
             ->latest()
-            ->paginate(3);
+            ->paginate(7);
 
         $categories = Category::where('is_active', true)->get();
         $brands = Brand::where('is_active', true)->get();

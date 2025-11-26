@@ -12,9 +12,15 @@ use Livewire\Attributes\Layout;
 class Index extends Component
 {
     use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 
     #[Layout('components.layouts.admin')]
     public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public $isOpen = 0;
     public $user_id, $name, $email, $password, $role;
 
@@ -37,10 +43,12 @@ class Index extends Component
 
     public function render()
     {
-        $users = User::where('name', 'like', '%' . $this->search . '%')
-            ->orWhere('email', 'like', '%' . $this->search . '%')
+        $users = User::where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('email', 'like', '%' . $this->search . '%');
+            })
             ->latest()
-            ->paginate(3);
+            ->paginate(7);
 
         return view('livewire.features.admin.users.index', [
             'users' => $users,

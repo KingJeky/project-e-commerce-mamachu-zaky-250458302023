@@ -13,8 +13,15 @@ class Index extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'bootstrap';
+
     #[Layout('components.layouts.admin')]
     public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 
     public bool $is_edit_mode = false;
 
@@ -127,12 +134,14 @@ class Index extends Component
     public function render()
     {
         $orders = Order::with('user')
-            ->whereHas('user', function ($query) {
-                $query->where('name', 'like', '%' . $this->search . '%');
+            ->where(function ($query) {
+                $query->whereHas('user', function ($userQuery) {
+                    $userQuery->where('name', 'like', '%' . $this->search . '%');
+                })
+                ->orWhere('id', 'like', '%' . $this->search . '%');
             })
-            ->orWhere('id', 'like', '%' . $this->search . '%')
             ->latest()
-            ->paginate(3);
+            ->paginate(7);
 
         $users = User::where('role', 'user')->get();
 

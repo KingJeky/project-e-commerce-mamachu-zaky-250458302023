@@ -13,12 +13,18 @@ class Index extends Component
 {
     use WithPagination;
     use WithFileUploads;
+    protected $paginationTheme = 'bootstrap';
 
     #[Layout('components.layouts.admin')]
     public $name, $slug, $image, $category_id;
     public bool $is_active = true;
     public $newImage;
     public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
     public $isOpen = 0;
 
     protected $rules = [
@@ -29,10 +35,12 @@ class Index extends Component
 
     public function render()
     {
-        $categories = Category::where('name', 'like', '%' . $this->search . '%')
+        $categories = Category::where(function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%')
+                      ->orWhere('slug', 'like', '%' . $this->search . '%');
+            })
             ->latest()
-            ->paginate(3);
-
+            ->paginate(7);
 
         return view('livewire.features.admin.categories.index', [
             'categories' => $categories,

@@ -16,15 +16,17 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="card-title">Brands</h5>
-                <button wire:click="create()" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Brand</button>
+                <button wire:click="create()" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New
+                    Brand</button>
             </div>
             <div class="card-body">
-                @if($isOpen)
+                @if ($isOpen)
                     @include('livewire.features.admin.brands.form')
                 @endif
 
                 <div class="mb-3">
-                    <input wire:model.live.debounce.300ms="search" type="text" class="form-control" placeholder="Search brands by name...">
+                    <input wire:model.live.debounce.300ms="search" type="text" class="form-control"
+                        placeholder="Search brands by name...">
                 </div>
 
                 <div class="table-responsive">
@@ -44,8 +46,9 @@
                                 <tr>
                                     <td>{{ $brands->firstItem() + $index }}</td>
                                     <td>
-                                        @if($brand->image)
-                                            <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}" width="60" class="rounded">
+                                        @if ($brand->image)
+                                            <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}"
+                                                width="60" class="rounded">
                                         @else
                                             <span class="text-muted">No Image</span>
                                         @endif
@@ -58,11 +61,14 @@
                                         </span>
                                     </td>
                                     <td class="flex gap-2">
-                                        <button wire:click="edit({{ $brand->id }})" class="btn btn-info flex items-center justify-center px-2 py-1 h-5">
+                                        <button wire:click="edit({{ $brand->id }})"
+                                            class="btn btn-info flex items-center justify-center px-2 py-1 h-5">
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5" x-data x-on:click.prevent="
+                                        <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5"
+                                            x-data
+                                            x-on:click.prevent="
                                             Swal.fire({
                                                 title: 'Yakin hapus brand?',
                                                 text: 'Data yang dihapus tidak bisa dikembalikan!',
@@ -91,7 +97,7 @@
                 </div>
 
                 <div class="mt-3 d-flex justify-content-end">
-                    {{ $brands->links('pagination::bootstrap-5') }}
+                    {{ $brands->links() }}
                 </div>
             </div>
         </div>

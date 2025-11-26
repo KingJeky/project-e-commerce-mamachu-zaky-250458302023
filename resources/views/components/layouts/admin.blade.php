@@ -16,6 +16,14 @@
     @livewireStyles
     <link rel="stylesheet" href="{{ asset('mazer/assets/compiled/css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/assets/compiled/css/app-dark.css') }}">
+
+    <style>
+        .page-item.active .page-link {
+            background-color: #435ebe;
+            border-color: #435ebe;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
