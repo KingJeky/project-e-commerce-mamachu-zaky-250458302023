@@ -5,10 +5,15 @@ namespace App\Livewire\Features\User;
 use App\Models\Order;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\WithFileUploads;
 
 class MyOrders extends Component
 {
+    use WithFileUploads;
+
     public $orders = [];
+    public $receiptProof;
+    public $confirmingOrderId = null;
 
     public function mount()
     {
@@ -248,6 +253,7 @@ class MyOrders extends Component
             'new' => 'Pesanan Baru',
             'processing' => 'Diproses',
             'shipped' => 'Dikirim',
+            'delivered' => 'Terkirim',
             'completed' => 'Selesai',
             'cancelled' => 'Dibatalkan',
         ];
@@ -261,6 +267,7 @@ class MyOrders extends Component
             'new' => 'bg-blue-100 text-blue-700',
             'processing' => 'bg-yellow-100 text-yellow-700',
             'shipped' => 'bg-purple-100 text-purple-700',
+            'delivered' => 'bg-indigo-100 text-indigo-700',
             'completed' => 'bg-green-100 text-green-700',
             'cancelled' => 'bg-red-100 text-red-700',
         ];
@@ -392,6 +399,90 @@ class MyOrders extends Component
                 'text' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
         }
+    }
+
+    public function confirmDelivery($orderId)
+    {
+        $order = Order::where('id', $orderId)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$order) {
+            $this->dispatch('swal:error', [
+                'title' => 'Gagal!',
+                'text' => 'Order tidak ditemukan'
+            ]);
+            return;
+        }
+
+        // Verify order is in delivered status and paid
+        if ($order->status != 'delivered' || $order->payment_status != 'paid') {
+            $this->dispatch('swal:error', [
+                'title' => 'Tidak Dapat Dikonfirmasi!',
+                'text' => 'Pesanan harus dalam status delivered dan sudah dibayar'
+            ]);
+            return;
+        }
+
+        // Set the confirming order ID to show the modal
+        $this->confirmingOrderId = $orderId;
+    }
+
+    public function uploadReceiptProof()
+    {
+        $this->validate([
+            'receiptProof' => 'required|image|max:2048', // 2MB max
+        ], [
+            'receiptProof.required' => 'Silakan pilih foto bukti penerimaan',
+            'receiptProof.image' => 'File harus berupa gambar',
+            'receiptProof.max' => 'Ukuran file maksimal 2MB',
+        ]);
+
+        $order = Order::where('id', $this->confirmingOrderId)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if (!$order) {
+            $this->dispatch('swal:error', [
+                'title' => 'Gagal!',
+                'text' => 'Order tidak ditemukan'
+            ]);
+            return;
+        }
+
+        try {
+            // Store the receipt proof
+            $filename = 'order_' . $order->id . '_' . time() . '.' . $this->receiptProof->extension();
+            $path = $this->receiptProof->storeAs('receipt_proofs', $filename, 'public');
+
+            // Update order with receipt proof and change status to completed
+            $order->update([
+                'receipt_proof' => $path,
+                'status' => 'completed'
+            ]);
+
+            // Reset properties
+            $this->reset(['receiptProof', 'confirmingOrderId']);
+
+            // Reload orders
+            $this->loadOrders();
+
+            $this->dispatch('swal:success', [
+                'title' => 'Berhasil!',
+                'text' => 'Bukti penerimaan berhasil dikirim. Pesanan selesai!'
+            ]);
+
+        } catch (\Exception $e) {
+            $this->dispatch('swal:error', [
+                'title' => 'Gagal!',
+                'text' => 'Gagal mengunggah bukti: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    public function cancelConfirmDelivery()
+    {
+        $this->reset(['receiptProof', 'confirmingOrderId']);
     }
 
     #[Layout('components.layouts.app')]

@@ -32,6 +32,11 @@ class Index extends Component
     #[Rule('required|numeric')]
     public $grand_total;
 
+    // Properties for viewing proofs
+    public $viewingOrderId = null;
+    public $viewingOrder = null;
+    public bool $showProofModal = false;
+
     public function create()
     {
         $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
@@ -101,6 +106,22 @@ class Index extends Component
                 'message' => 'Order not found.',
             ]);
         }
+    }
+
+    public function viewOrderProofs($id)
+    {
+        $this->viewingOrder = Order::with(['user', 'address', 'items.product'])->find($id);
+        if ($this->viewingOrder) {
+            $this->viewingOrderId = $id;
+            $this->showProofModal = true;
+        }
+    }
+
+    public function closeProofModal()
+    {
+        $this->showProofModal = false;
+        $this->viewingOrderId = null;
+        $this->viewingOrder = null;
     }
 
     public function render()

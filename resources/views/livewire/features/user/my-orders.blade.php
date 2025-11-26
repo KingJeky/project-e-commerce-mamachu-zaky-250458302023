@@ -168,13 +168,6 @@
                                                     <i class="fa-solid fa-credit-card mr-2"></i>
                                                     Bayar dengan Midtrans
                                                 </a>
-
-                                                {{-- Check Status Button --}}
-                                                <button wire:click="checkPaymentStatus({{ $order->id }})"
-                                                    class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-full font-bold transition">
-                                                    <i class="fa-solid fa-sync mr-2"></i>
-                                                    Cek Status
-                                                </button>
                                             @else
                                                 {{-- Transfer Bank Payment --}}
                                                 <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
@@ -192,6 +185,24 @@
                                                 <i class="fa-solid fa-times-circle mr-2"></i>
                                                 Batalkan Pesanan
                                             </button>
+                                        @endif
+
+                                        {{-- Confirm Delivery Button (for delivered orders) --}}
+                                        @if ($order->status == 'delivered' && $order->payment_status == 'paid' && !$order->receipt_proof)
+                                            <button wire:click="confirmDelivery({{ $order->id }})"
+                                                class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
+                                                <i class="fa-solid fa-check-circle mr-2"></i>
+                                                Pesanan Diterima
+                                            </button>
+                                        @endif
+
+                                        {{-- Show Receipt Confirmed (if already uploaded) --}}
+                                        @if ($order->receipt_proof)
+                                            <div
+                                                class="flex-1 bg-green-50 border-2 border-green-500 text-green-700 py-3 px-6 rounded-full font-bold text-center">
+                                                <i class="fa-solid fa-check-double mr-2"></i>
+                                                Pesanan Sudah Dikonfirmasi
+                                            </div>
                                         @endif
                                     </div>
                                 </div>
@@ -218,6 +229,94 @@
             @endif
         </div>
     </section>
+
+    {{-- Receipt Proof Upload Modal --}}
+    @if ($confirmingOrderId)
+        <div class="fixed inset-0 z-50 overflow-y-auto" x-data="{ show: true }">
+            <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                {{-- Background overlay --}}
+                <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+                    wire:click="cancelConfirmDelivery"></div>
+
+                {{-- Modal panel --}}
+                <div
+                    class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    {{-- Modal Header --}}
+                    <div class="bg-gradient-to-r from-green-600 to-green-500 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-camera"></i>
+                                Konfirmasi Penerimaan Pesanan
+                            </h3>
+                            <button wire:click="cancelConfirmDelivery"
+                                class="text-white hover:text-gray-200 transition">
+                                <i class="fa-solid fa-times text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {{-- Modal Body --}}
+                    <div class="px-6 py-6">
+                        <p class="text-gray-700 mb-4">
+                            <i class="fa-solid fa-info-circle text-blue-500 mr-2"></i>
+                            Silakan upload foto bukti bahwa Anda telah menerima pesanan ini.
+                        </p>
+
+                        {{-- File Input --}}
+                        <div class="mb-4">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">
+                                Foto Bukti Penerimaan <span class="text-red-500">*</span>
+                            </label>
+                            <input type="file" wire:model="receiptProof" accept="image/*"
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer">
+                            @error('receiptProof')
+                                <p class="mt-2 text-sm text-red-600">
+                                    <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        {{-- Image Preview --}}
+                        @if ($receiptProof)
+                            <div class="mb-4">
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Preview:</label>
+                                <div class="relative rounded-xl overflow-hidden border-2 border-gray-200">
+                                    <img src="{{ $receiptProof->temporaryUrl() }}" alt="Preview"
+                                        class="w-full h-64 object-cover">
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+                            <i class="fa-solid fa-exclamation-triangle mr-2"></i>
+                            Pastikan foto jelas dan dapat terbaca. Maksimal ukuran file 2MB.
+                        </div>
+                    </div>
+
+                    {{-- Modal Footer --}}
+                    <div class="bg-gray-50 px-6 py-4 flex gap-3 justify-end">
+                        <button wire:click="cancelConfirmDelivery"
+                            class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-full transition">
+                            <i class="fa-solid fa-times mr-2"></i>
+                            Batal
+                        </button>
+                        <button wire:click="uploadReceiptProof" wire:loading.attr="disabled"
+                            class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-full shadow-lg transition disabled:opacity-50">
+                            <span wire:loading.remove wire:target="uploadReceiptProof">
+                                <i class="fa-solid fa-check mr-2"></i>
+                                Konfirmasi & Upload
+                            </span>
+                            <span wire:loading wire:target="uploadReceiptProof">
+                                <i class="fa-solid fa-spinner fa-spin mr-2"></i>
+                                Mengunggah...
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 @push('scripts')

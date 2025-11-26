@@ -75,6 +75,10 @@
                                         </span>
                                     </td>
                                     <td>
+                                        <button wire:click="viewOrderProofs({{ $order->id }})"
+                                            class="btn btn-info btn-sm">
+                                            <i class="bi bi-eye"></i> View Proofs
+                                        </button>
                                         <button wire:click="edit({{ $order->id }})"
                                             class="btn btn-primary btn-sm">Edit</button>
                                         <button wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })"
@@ -96,6 +100,137 @@
             </div>
         </div>
     </section>
+
+    {{-- Proof Viewing Modal --}}
+    @if ($showProofModal && $viewingOrder)
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="bi bi-file-image"></i> Order Proofs - #{{ $viewingOrder->id }}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" wire:click="closeProofModal"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{-- Order Info --}}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6 class="card-title">Order Information</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Customer:</strong> {{ $viewingOrder->user->name }}
+                                        </p>
+                                        <p class="mb-1"><strong>Order Date:</strong>
+                                            {{ $viewingOrder->created_at->format('d M Y, H:i') }}</p>
+                                        <p class="mb-1"><strong>Payment Method:</strong>
+                                            {{ ucfirst($viewingOrder->payment_method) }}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Status:</strong>
+                                            @php
+                                                $statusColors = [
+                                                    'new' => 'info',
+                                                    'processing' => 'primary',
+                                                    'shipped' => 'warning',
+                                                    'delivered' => 'purple',
+                                                    'completed' => 'success',
+                                                    'cancelled' => 'danger',
+                                                ];
+                                                $statusColor =
+                                                    $statusColors[strtolower($viewingOrder->status ?? 'new')] ??
+                                                    'secondary';
+                                            @endphp
+                                            <span
+                                                class="badge bg-{{ $statusColor }}">{{ ucfirst($viewingOrder->status) }}</span>
+                                        </p>
+                                        <p class="mb-1"><strong>Payment Status:</strong>
+                                            @php
+                                                $paymentColors = [
+                                                    'pending' => 'warning',
+                                                    'paid' => 'success',
+                                                    'failed' => 'danger',
+                                                ];
+                                                $paymentColor =
+                                                    $paymentColors[
+                                                        strtolower($viewingOrder->payment_status ?? 'pending')
+                                                    ] ?? 'secondary';
+                                            @endphp
+                                            <span
+                                                class="badge bg-{{ $paymentColor }}">{{ ucfirst($viewingOrder->payment_status) }}</span>
+                                        </p>
+                                        <p class="mb-1"><strong>Total:</strong> Rp
+                                            {{ number_format($viewingOrder->grand_total, 0, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Payment Proof (for transfer method) --}}
+                        @if ($viewingOrder->payment_method == 'transfer')
+                            <div class="card mb-3">
+                                <div class="card-header bg-light">
+                                    <h6 class="mb-0"><i class="bi bi-receipt"></i> Payment Proof</h6>
+                                </div>
+                                <div class="card-body">
+                                    @if ($viewingOrder->payment_proof)
+                                        <div class="text-center">
+                                            <img src="{{ asset('storage/' . $viewingOrder->payment_proof) }}"
+                                                alt="Payment Proof" class="img-fluid rounded border"
+                                                style="max-height: 400px;">
+                                            <p class="mt-2 text-muted mb-0">
+                                                <i class="bi bi-check-circle text-success"></i> Payment proof uploaded
+                                            </p>
+                                        </div>
+                                    @else
+                                        <div class="alert alert-warning mb-0">
+                                            <i class="bi bi-exclamation-triangle"></i> No payment proof uploaded yet
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div class="alert alert-info mb-3">
+                                <i class="bi bi-info-circle"></i> Payment method is
+                                {{ ucfirst($viewingOrder->payment_method) }} - No payment proof required
+                            </div>
+                        @endif
+
+                        {{-- Receipt Proof --}}
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0"><i class="bi bi-box-seam"></i> Receipt Proof</h6>
+                            </div>
+                            <div class="card-body p-3">
+                                @if ($viewingOrder->receipt_proof)
+                                    <div class="text-center">
+                                        <img src="{{ asset('storage/' . $viewingOrder->receipt_proof) }}"
+                                            alt="Receipt Proof" class="img-fluid rounded border"
+                                            style="max-height: 400px;">
+                                        <p class="mt-3 text-muted mb-0">
+                                            <i class="bi bi-check-circle text-success"></i> Customer confirmed receipt
+                                        </p>
+                                    </div>
+                                @else
+                                    <div class="alert alert-warning mb-0">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        @if ($viewingOrder->status == 'delivered')
+                                            Waiting for customer to confirm receipt
+                                        @else
+                                            Order not yet delivered
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" wire:click="closeProofModal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     @include('livewire.features.admin.orders.form')
 </div>
