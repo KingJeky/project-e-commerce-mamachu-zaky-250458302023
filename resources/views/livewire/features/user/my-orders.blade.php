@@ -158,7 +158,7 @@
                                     </div>
 
                                     {{-- Action Buttons --}}
-                                    <div class="flex gap-3">
+                                    <div class="flex flex-wrap gap-3">
                                         {{-- Pay Now Button for Pending Payment --}}
                                         @if ($order->payment_status == 'pending')
                                             @if ($order->payment_method == 'midtrans')
@@ -168,6 +168,13 @@
                                                     <i class="fa-solid fa-credit-card mr-2"></i>
                                                     Bayar dengan Midtrans
                                                 </a>
+
+                                                {{-- Check Status Button --}}
+                                                <button wire:click="checkPaymentStatus({{ $order->id }})"
+                                                    class="bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-full font-bold transition">
+                                                    <i class="fa-solid fa-sync mr-2"></i>
+                                                    Cek Status
+                                                </button>
                                             @else
                                                 {{-- Transfer Bank Payment --}}
                                                 <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
@@ -271,6 +278,24 @@
                     title: title,
                     text: text,
                     confirmButtonColor: '#FF6B6B',
+                    customClass: {
+                        popup: 'font-body',
+                        title: 'font-heading',
+                        confirmButton: 'font-semibold'
+                    }
+                });
+            });
+
+            Livewire.on('swal:info', (event) => {
+                const {
+                    title,
+                    text
+                } = event;
+                Swal.fire({
+                    icon: 'info',
+                    title: title,
+                    text: text,
+                    confirmButtonColor: '#6366f1',
                     customClass: {
                         popup: 'font-body',
                         title: 'font-heading',

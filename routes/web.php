@@ -66,3 +66,8 @@ Route::middleware(['role:user'])->group(function () {
 // Midtrans callback (no middleware, will be called by Midtrans server)
 Route::post('/midtrans/callback', [App\Http\Controllers\MidtransController::class, 'callback'])->name('midtrans.callback');
 
+// Midtrans check status (for development, when webhook doesn't work)
+Route::get('/midtrans/check-status/{orderId}', [App\Http\Controllers\MidtransController::class, 'checkStatus'])
+    ->middleware(['role:user'])
+    ->name('midtrans.check-status');
+

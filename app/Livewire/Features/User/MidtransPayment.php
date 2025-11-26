@@ -70,7 +70,7 @@ class MidtransPayment extends Component
             ],
             'item_details' => [],
             'callbacks' => [
-                'finish' => route('user.my-orders'),
+                'finish' => route('user.my-orders', ['paid_order' => $this->order->id]),
             ],
         ];
 

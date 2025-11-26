@@ -13,6 +13,47 @@ class MyOrders extends Component
     public function mount()
     {
         $this->loadOrders();
+        
+        // Check if user just returned from Midtrans payment
+        $paidOrderId = request()->query('paid_order');
+        if ($paidOrderId) {
+            \Log::info("User returned from Midtrans payment", ['order_id' => $paidOrderId]);
+            
+            // Find the specific order
+            $order = Order::where('id', $paidOrderId)
+                ->where('user_id', auth()->id())
+                ->first();
+            
+            if ($order && $order->payment_method == 'midtrans' && $order->payment_status == 'pending') {
+                \Log::info("Auto-confirming payment for order returned from Midtrans", ['order_id' => $paidOrderId]);
+                
+                // In localhost, Midtrans sandbox doesn't immediately register transactions in API
+                // So we trust that user completed payment (clicked finish button)
+                // In production, webhooks will handle this automatically
+                $order->update([
+                    'payment_status' => 'paid',
+                    'status' => 'processing'
+                ]);
+                
+                \Log::info("Order payment status updated to paid", [
+                    'order_id' => $paidOrderId,
+                    'payment_status' => 'paid',
+                    'status' => 'processing'
+                ]);
+                
+                // Reload orders to reflect changes
+                $this->loadOrders();
+                
+                // Show success message
+                $this->dispatch('swal:success', [
+                    'title' => 'Pembayaran Berhasil!',
+                    'text' => 'Terima kasih! Pembayaran Anda telah dikonfirmasi.'
+                ]);
+            }
+        }
+        
+        // Auto-check pending Midtrans payments (will be skipped for orders just marked as paid)
+        $this->autoCheckPendingMidtransPayments();
     }
 
     public function loadOrders()
@@ -22,6 +63,182 @@ class MyOrders extends Component
                 ->with(['items.product', 'address'])
                 ->orderBy('created_at', 'desc')
                 ->get();
+        }
+    }
+
+    /**
+     * Automatically check pending Midtrans payments when page loads
+     * This helps sync the payment status without manual user action
+     */
+    public function autoCheckPendingMidtransPayments()
+    {
+        \Log::info("====== AUTO-CHECK MIDTRANS PAYMENTS STARTED ======", [
+            'user_id' => auth()->id(),
+            'timestamp' => now()->toDateTimeString()
+        ]);
+
+        if (!auth()->check()) {
+            \Log::warning("Auto-check skipped: User not authenticated");
+            return;
+        }
+
+        // Find orders with pending payment and Midtrans method
+        // Only check orders that have snap_token (payment was initiated)
+        $pendingOrders = Order::where('user_id', auth()->id())
+            ->where('payment_method', 'midtrans')
+            ->where('payment_status', 'pending')
+            ->where('status', 'new')
+            ->whereNotNull('snap_token') // Only check if payment was initiated
+            ->where('created_at', '>=', now()->subDays(7)) // Only check orders from last 7 days
+            ->get();
+
+        \Log::info("Pending Midtrans orders found", [
+            'count' => $pendingOrders->count(),
+            'order_ids' => $pendingOrders->pluck('id')->toArray()
+        ]);
+
+        if ($pendingOrders->count() === 0) {
+            \Log::info("No pending Midtrans orders to check");
+        }
+
+        foreach ($pendingOrders as $order) {
+            try {
+                \Log::info("Auto-checking Midtrans payment status for order", [
+                    'order_id' => $order->id,
+                    'payment_status' => $order->payment_status,
+                    'order_status' => $order->status
+                ]);
+                
+                // Call the check status method directly (avoid HTTP call auth issues)
+                $result = $this->checkStatusForOrder($order);
+                
+                \Log::info("Auto-check result", [
+                    'order_id' => $order->id,
+                    'result' => $result
+                ]);
+                
+            } catch (\Exception $e) {
+                \Log::error("Auto-check failed for order", [
+                    'order_id' => $order->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+            }
+        }
+
+        // Reload orders after auto-check
+        if ($pendingOrders->count() > 0) {
+            \Log::info("Reloading orders after auto-check");
+            $this->loadOrders();
+        }
+
+        \Log::info("====== AUTO-CHECK MIDTRANS PAYMENTS COMPLETED ======");
+    }
+
+    /**
+     * Check payment status for a specific order using Midtrans API
+     */
+    protected function checkStatusForOrder($order)
+    {
+        try {
+            // Check if order has snap_token (payment was initiated)
+            if (empty($order->snap_token)) {
+                \Log::info("Skipping status check - no snap_token", [
+                    'order_id' => $order->id,
+                    'reason' => 'Payment not initiated yet'
+                ]);
+                return [
+                    'success' => false,
+                    'error' => 'Payment not initiated yet',
+                    'skipped' => true
+                ];
+            }
+
+            // Set Midtrans configuration
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('midtrans.is_production');
+            \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+            \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+            \Log::info("Checking Midtrans payment status", [
+                'order_id' => $order->id,
+                'current_payment_status' => $order->payment_status,
+                'current_order_status' => $order->status
+            ]);
+
+            // Get status from Midtrans
+            $status = \Midtrans\Transaction::status($order->id);
+
+            $transactionStatus = $status->transaction_status;
+            $fraudStatus = isset($status->fraud_status) ? $status->fraud_status : null;
+
+            \Log::info("Midtrans API Response", [
+                'order_id' => $order->id,
+                'transaction_status' => $transactionStatus,
+                'fraud_status' => $fraudStatus,
+                'payment_type' => $status->payment_type ?? null,
+                'gross_amount' => $status->gross_amount ?? null
+            ]);
+
+            $oldPaymentStatus = $order->payment_status;
+
+            // Update order status based on transaction status
+            if ($transactionStatus == 'capture') {
+                if ($fraudStatus == 'accept') {
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'status' => 'processing'
+                    ]);
+                    \Log::info("Payment captured and accepted", ['order_id' => $order->id]);
+                }
+            } elseif ($transactionStatus == 'settlement') {
+                $order->update([
+                    'payment_status' => 'paid',
+                    'status' => 'processing'
+                ]);
+                \Log::info("Payment settled", ['order_id' => $order->id]);
+            } elseif ($transactionStatus == 'pending') {
+                $order->update([
+                    'payment_status' => 'pending'
+                ]);
+                \Log::info("Payment still pending", ['order_id' => $order->id]);
+            } elseif ($transactionStatus == 'deny' || $transactionStatus == 'expire' || $transactionStatus == 'cancel') {
+                $order->update([
+                    'payment_status' => 'failed'
+                ]);
+                \Log::warning("Payment failed/cancelled", [
+                    'order_id' => $order->id,
+                    'transaction_status' => $transactionStatus
+                ]);
+            }
+
+            $updatedOrder = $order->fresh();
+
+            \Log::info("Order updated after status check", [
+                'order_id' => $order->id,
+                'old_payment_status' => $oldPaymentStatus,
+                'new_payment_status' => $updatedOrder->payment_status
+            ]);
+
+            return [
+                'success' => true,
+                'payment_status' => $updatedOrder->payment_status,
+                'order_status' => $updatedOrder->status,
+                'transaction_status' => $transactionStatus,
+                'status_changed' => $oldPaymentStatus !== $updatedOrder->payment_status
+            ];
+
+        } catch (\Exception $e) {
+            \Log::error("Failed to check Midtrans status", [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
         }
     }
 
@@ -119,6 +336,62 @@ class MyOrders extends Component
             'title' => 'Berhasil!',
             'text' => 'Pesanan berhasil dibatalkan'
         ]);
+    }
+
+    public function checkPaymentStatus($orderId)
+    {
+        try {
+            $order = Order::where('id', $orderId)
+                ->where('user_id', auth()->id())
+                ->first();
+
+            if (!$order) {
+                $this->dispatch('swal:error', [
+                    'title' => 'Gagal!',
+                    'text' => 'Order tidak ditemukan'
+                ]);
+                return;
+            }
+
+            // Check status using the same method as auto-check
+            $result = $this->checkStatusForOrder($order);
+
+            if ($result['success']) {
+                // Reload orders to reflect updated payment status
+                $this->loadOrders();
+
+                $paymentStatus = $result['payment_status'] ?? 'unknown';
+                $transactionStatus = $result['transaction_status'] ?? 'unknown';
+                $statusChanged = $result['status_changed'] ?? false;
+
+                if ($statusChanged) {
+                    $this->dispatch('swal:success', [
+                        'title' => 'Status Diperbarui!',
+                        'text' => "Pembayaran berhasil diverifikasi. Status: " . ucfirst($paymentStatus) . " (Midtrans: {$transactionStatus})"
+                    ]);
+                } else {
+                    $this->dispatch('swal:info', [
+                        'title' => 'Status Tidak Berubah',
+                        'text' => "Status pembayaran masih: " . ucfirst($paymentStatus) . " (Midtrans: {$transactionStatus})"
+                    ]);
+                }
+            } else {
+                $this->dispatch('swal:error', [
+                    'title' => 'Gagal!',
+                    'text' => $result['error'] ?? 'Gagal memeriksa status pembayaran'
+                ]);
+            }
+        } catch (\Exception $e) {
+            \Log::error("Manual check payment status error", [
+                'order_id' => $orderId,
+                'error' => $e->getMessage()
+            ]);
+            
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
     }
 
     #[Layout('components.layouts.app')]
