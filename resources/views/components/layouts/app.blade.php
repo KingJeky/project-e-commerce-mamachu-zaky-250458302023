@@ -237,16 +237,16 @@
                 </div>
 
                 <div class="flex gap-4">
-                    <a href="#"
+                    <a href="https://www.instagram.com/jeky.zhrn?igsh=MWgyYWwxcXVveXZsMQ=="
                         class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-pop-primary hover:scale-110 transition shadow-lg"><i
                             class="fa-brands fa-instagram text-xl"></i></a>
                     <a href="#"
                         class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-pop-primary hover:scale-110 transition shadow-lg"><i
                             class="fa-brands fa-twitter text-xl"></i></a>
-                    <a href="#"
+                    <a href="https://wa.me/qr/47ET3M5S6GL7C1"
                         class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-pop-primary hover:scale-110 transition shadow-lg"><i
-                            class="fa-brands fa-facebook-f text-xl"></i></a>
-                    <a href="#"
+                            class="fa-brands fa-whatsapp text-xl"></i></a>
+                    <a href="https://clicky.id/zaky"
                         class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-pop-primary hover:scale-110 transition shadow-lg"><i
                             class="fa-solid fa-envelope text-xl"></i></a>
                 </div>

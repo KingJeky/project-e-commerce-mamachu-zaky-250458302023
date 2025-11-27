@@ -12,10 +12,12 @@
 
     <section class="section">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Users</h5>
-                <button wire:click="create()" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New
-                    User</button>
+            <div
+                class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2">
+                <h5 class="card-title mb-0">Users</h5>
+                <button wire:click="create()" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New User
+                </button>
             </div>
             <div class="card-body">
 
@@ -51,14 +53,14 @@
                                             class="badge {{ $user->role === 'admin' ? 'bg-primary' : 'bg-success' }}">{{ ucfirst($user->role) }}</span>
                                     </td>
                                     <td>{{ $user->created_at->format('d F Y') }}</td>
-                                    <td class="flex gap-2">
-                                        <button wire:click="edit({{ $user->id }})"
-                                            class="btn btn-info flex items-center justify-center px-2 py-1 h-5">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5"
-                                            x-data
-                                            x-on:click.prevent="
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <button wire:click="edit({{ $user->id }})" class="btn btn-sm btn-info"
+                                                title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" title="Delete" x-data
+                                                x-on:click.prevent="
                                                     Swal.fire({
                                                         title: 'Yakin hapus pengguna?',
                                                         text: 'Data yang dihapus tidak bisa dikembalikan!',
@@ -73,8 +75,9 @@
                                                         }
                                                     });
                                                 ">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -86,7 +89,7 @@
                     </table>
                 </div>
 
-                <div class="mt-3 d-flex justify-content-end">
+                <div class="mt-3 d-flex justify-content-center justify-content-sm-end">
                     {{ $users->links() }}
                 </div>
             </div>

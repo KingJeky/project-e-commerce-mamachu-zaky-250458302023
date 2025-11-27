@@ -12,8 +12,9 @@
 
     <section class="section">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Orders</h5>
+            <div
+                class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2">
+                <h5 class="card-title mb-0">Orders</h5>
                 <button wire:click="create" class="btn btn-primary">Add New Order</button>
             </div>
             <div class="card-body">
@@ -75,14 +76,21 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <button wire:click="viewOrderProofs({{ $order->id }})"
-                                            class="btn btn-info btn-sm">
-                                            <i class="bi bi-eye"></i> View Proofs
-                                        </button>
-                                        <button wire:click="edit({{ $order->id }})"
-                                            class="btn btn-primary btn-sm">Edit</button>
-                                        <button wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })"
-                                            class="btn btn-danger btn-sm">Delete</button>
+                                        <div class="d-flex gap-1">
+                                            <button wire:click="viewOrderProofs({{ $order->id }})"
+                                                class="btn btn-sm btn-info" title="View Proofs">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            <button wire:click="edit({{ $order->id }})"
+                                                class="btn btn-sm btn-primary" title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button
+                                                wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })"
+                                                class="btn btn-sm btn-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -94,7 +102,7 @@
                     </table>
                 </div>
 
-                <div class="mt-3 d-flex justify-content-end">
+                <div class="mt-3 d-flex justify-content-center justify-content-sm-end">
                     {{ $orders->links() }}
                 </div>
             </div>

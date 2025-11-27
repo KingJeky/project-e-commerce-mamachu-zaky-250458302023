@@ -23,6 +23,111 @@
             border-color: #435ebe;
             color: white;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+
+            /* Table Responsive */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 600px;
+            }
+
+            /* Card Header Responsive */
+            .card-header {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .card-header .card-title {
+                flex: 1 1 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .card-header .btn {
+                flex: 1 1 100%;
+            }
+
+            /* Action Buttons in Table */
+            .table td.flex {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .table td.flex .btn {
+                width: 100%;
+                padding: 0.5rem;
+            }
+
+            /* Pagination Center on Mobile */
+            .pagination {
+                justify-content: center !important;
+            }
+
+            /* Modal Responsive */
+            .modal-dialog {
+                margin: 0.5rem;
+                max-width: calc(100% - 1rem);
+            }
+
+            .modal-body img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* Page Heading */
+            .page-heading .page-title h3 {
+                font-size: 1.5rem;
+            }
+
+            .page-heading .page-title p {
+                font-size: 0.875rem;
+            }
+
+            /* Search Input */
+            .form-control {
+                font-size: 1rem;
+            }
+
+            /* Stats Cards */
+            .stats-icon {
+                width: 3rem;
+                height: 3rem;
+            }
+
+            /* Badge Spacing */
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.375rem 0.625rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            /* Extra small devices */
+            .table {
+                font-size: 0.875rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            .btn-sm {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.875rem;
+            }
+
+            /* Make buttons full width on very small screens */
+            .table td .btn {
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 

@@ -13,8 +13,9 @@
 
     <section class="section">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="card-title">Categories</h5>
+            <div
+                class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-stretch align-items-sm-center gap-2">
+                <h5 class="card-title mb-0">Categories</h5>
                 <button wire:click="create()" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Add New Category
                 </button>
@@ -75,31 +76,31 @@
                                         </span>
                                     </td>
 
-                                    <td class="flex gap-2">
-                                        <button wire:click="edit({{ $category->id }})"
-                                            class="btn btn-info flex items-center justify-center px-2 py-1 h-5">
-                                            <i class="bi bi-pencil"></i>
-                                        </button>
-
-                                        <button class="btn btn-danger flex items-center justify-center px-2 py-1 h-5"
-                                            x-data
-                                            x-on:click.prevent="
-                                                Swal.fire({
-                                                    title: 'Yakin hapus kategori?',
-                                                    text: 'Data yang dihapus tidak bisa dikembalikan!',
-                                                    icon: 'warning',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#d33',
-                                                    cancelButtonColor: '#3085d6',
-                                                    confirmButtonText: 'Ya, hapus!'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        $wire.delete({{ $category->id }});
-                                                    }
-                                                });
-                                            ">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
+                                    <td>
+                                        <div class="d-flex gap-1">
+                                            <button wire:click="edit({{ $category->id }})" class="btn btn-sm btn-info"
+                                                title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" title="Delete" x-data
+                                                x-on:click.prevent="
+                                                    Swal.fire({
+                                                        title: 'Yakin hapus kategori?',
+                                                        text: 'Data yang dihapus tidak bisa dikembalikan!',
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#d33',
+                                                        cancelButtonColor: '#3085d6',
+                                                        confirmButtonText: 'Ya, hapus!'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            $wire.delete({{ $category->id }});
+                                                        }
+                                                    });
+                                                ">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -112,7 +113,7 @@
                 </div>
 
                 {{-- Pagination FIX --}}
-                <div class="mt-3 d-flex justify-content-end">
+                <div class="mt-3 d-flex justify-content-center justify-content-sm-end">
                     {{ $categories->links() }}
                 </div>
 
