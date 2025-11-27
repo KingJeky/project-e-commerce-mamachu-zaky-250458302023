@@ -61,10 +61,10 @@
                                     <span class="text-2xl font-black text-pop-primary">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
-                                    <a href="#"
+                                    {{-- <a href="#"
                                         class="bg-pop-dark text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-pop-primary hover:scale-110 transition shadow-lg">
                                         <i class="fa-solid fa-cart-plus text-lg"></i>
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div>
 

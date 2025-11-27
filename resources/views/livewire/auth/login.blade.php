@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Mamachu</title>
+    <title>Login - Mamachu</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -82,7 +82,7 @@
 
     <div class="min-h-screen flex">
 
-        <!-- Left Side - Register Form -->
+        <!-- Left Side - Login Form -->
         <div class="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12 slide-in">
             <div class="w-full max-w-md">
 
@@ -94,31 +94,12 @@
 
                 <!-- Title -->
                 <div class="mb-8">
-                    <h1 class="text-4xl font-heading font-bold text-black mb-2">Yuk, Gabung! 🚀</h1>
-                    <p class="text-gray-600 text-lg">Buat akun dan nikmati berbagai minuman segar favoritmu</p>
+                    <h1 class="text-4xl font-heading font-bold text-black mb-2">Selamat Datang! 👋</h1>
+                    <p class="text-gray-600 text-lg">Masuk untuk melanjutkan petualangan rasamu</p>
                 </div>
 
-                <!-- Register Form -->
-                <form wire:submit.prevent="register" class="space-y-5">
-
-                    <!-- Name Input -->
-                    <div>
-                        <label class="block text-sm font-semibold text-pop-dark mb-2">Nama Lengkap</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-user text-gray-400"></i>
-                            </div>
-                            <input type="text" wire:model="name"
-                                class="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-pop-primary focus:ring-2 focus:ring-pop-primary/20 outline-none transition @error('name') border-red-500 @enderror"
-                                placeholder="Nama kamu">
-                        </div>
-                        @error('name')
-                            <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                                <i class="fa-solid fa-circle-exclamation"></i>
-                                {{ $message }}
-                            </p>
-                        @enderror
-                    </div>
+                <!-- Login Form -->
+                <form wire:submit.prevent="login" class="space-y-5">
 
                     <!-- Email Input -->
                     <div>
@@ -148,7 +129,7 @@
                             </div>
                             <input type="password" wire:model="password"
                                 class="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-pop-primary focus:ring-2 focus:ring-pop-primary/20 outline-none transition @error('password') border-red-500 @enderror"
-                                placeholder="Minimal 8 karakter">
+                                placeholder="Masukkan password kamu">
                         </div>
                         @error('password')
                             <p class="text-red-500 text-sm mt-1 flex items-center gap-1">
@@ -158,34 +139,33 @@
                         @enderror
                     </div>
 
-                    <!-- Password Confirmation Input -->
-                    <div>
-                        <label class="block text-sm font-semibold text-pop-dark mb-2">Konfirmasi Password</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-lock text-gray-400"></i>
-                            </div>
-                            <input type="password" wire:model="password_confirmation"
-                                class="w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:border-pop-primary focus:ring-2 focus:ring-pop-primary/20 outline-none transition"
-                                placeholder="Ketik ulang password">
-                        </div>
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" wire:model="remember"
+                                class="w-4 h-4 rounded border-gray-300 text-pop-primary focus:ring-pop-primary">
+                            <span class="text-sm text-gray-600">Ingat saya</span>
+                        </label>
+                        {{-- <a href="#" class="text-sm text-pop-accent font-semibold hover:text-blue-500 transition">
+                            Lupa password?
+                        </a> --}}
                     </div>
 
-                    <!-- Register Button -->
+                    <!-- Login Button -->
                     <button type="submit"
-                        class="w-full bg-gradient-to-r from-pop-accent to-blue-500 text-white font-heading font-semibold py-4 rounded-xl hover:shadow-2xl hover:shadow-pop-accent/50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Daftar Sekarang</span>
+                        class="w-full bg-gradient-to-r from-pop-primary to-orange-500 text-white font-heading font-semibold py-4 rounded-xl hover:shadow-2xl hover:shadow-pop-primary/50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Masuk Sekarang</span>
                     </button>
                 </form>
 
-                <!-- Login Link -->
+                <!-- Register Link -->
                 <div class="mt-6 text-center">
                     <p class="text-gray-600">
-                        Sudah punya akun?
-                        <a href="{{ route('login') }}"
+                        Belum punya akun?
+                        <a href="{{ route('register') }}"
                             class="text-pop-accent font-semibold hover:text-blue-500 transition">
-                            Masuk di sini
+                            Daftar di sini
                         </a>
                     </p>
                 </div>
@@ -195,14 +175,14 @@
 
         <!-- Right Side - Decorative -->
         <div
-            class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-pop-accent via-blue-400 to-pop-secondary items-center justify-center p-12 relative overflow-hidden">
+            class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-pop-primary via-orange-400 to-pop-secondary items-center justify-center p-12 relative overflow-hidden">
 
             <!-- Floating Bottles -->
             <div class="absolute top-20 right-20 text-white/20 text-9xl float-anim">
-                <i class="fa-solid fa-bottle-droplet"></i>
+                <i class="fa-solid fa-mug-hot"></i>
             </div>
             <div class="absolute bottom-20 left-20 text-white/20 text-7xl float-anim" style="animation-delay: 1s;">
-                <i class="fa-solid fa-glass-water"></i>
+                <i class="fa-solid fa-ice-cream"></i>
             </div>
 
             <!-- Content -->
@@ -210,11 +190,11 @@
                 <div class="mb-8">
                     <div
                         class="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-                        <i class="fa-solid fa-gift text-6xl"></i>
+                        <i class="fa-solid fa-heart text-6xl"></i>
                     </div>
-                    <h2 class="text-5xl font-heading font-bold mb-6">Bonus untuk Member Baru! 🎁</h2>
+                    <h2 class="text-5xl font-heading font-bold mb-6">Senang Bertemu Lagi! ❤️</h2>
                     <p class="text-xl mb-8 text-white/90">
-                        Daftar sekarang dan dapatkan voucher diskon 20% untuk pembelian pertama!
+                        Siap untuk menikmati minuman favoritmu hari ini?
                     </p>
                 </div>
 
@@ -223,31 +203,21 @@
                     <div class="flex items-start gap-3">
                         <div
                             class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-lg"></i>
+                            <i class="fa-solid fa-star text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg">Akses ke ribuan produk minuman</h3>
-                            <p class="text-sm text-white/80">Dari jus segar hingga minuman kekinian</p>
+                            <h3 class="font-semibold text-lg">Lanjutkan pesananmu</h3>
+                            <p class="text-sm text-white/80">Riwayat pesanan tersimpan aman</p>
                         </div>
                     </div>
                     <div class="flex items-start gap-3">
                         <div
                             class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-lg"></i>
+                            <i class="fa-solid fa-tag text-lg"></i>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-lg">Promo eksklusif member</h3>
-                            <p class="text-sm text-white/80">Diskon spesial setiap minggu</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <div
-                            class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                            <i class="fa-solid fa-check text-lg"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-lg">Gratis ongkir untuk member</h3>
-                            <p class="text-sm text-white/80">Minimal pembelian Rp 50.000</p>
+                            <h3 class="font-semibold text-lg">Cek promo terbaru</h3>
+                            <p class="text-sm text-white/80">Jangan lewatkan penawaran spesial</p>
                         </div>
                     </div>
                 </div>

@@ -26,3 +26,5 @@
 </body>
 
 </html>
+
+{{-- sekarang udah gak kepake karena login dan register udah punya tampilan sendiri --}}
