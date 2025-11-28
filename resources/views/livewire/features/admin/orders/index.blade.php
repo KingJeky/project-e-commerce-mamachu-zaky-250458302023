@@ -86,7 +86,7 @@
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <button
-                                                wire:click="$dispatch('delete-prompt', { id: {{ $order->id }} })"
+                                                wire:click="$dispatch('delete-prompt', { id: '{{ $order->id }}' })"
                                                 class="btn btn-sm btn-danger" title="Delete">
                                                 <i class="bi bi-trash"></i>
                                             </button>
