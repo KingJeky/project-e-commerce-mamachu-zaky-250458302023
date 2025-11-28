@@ -77,11 +77,11 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <button wire:click="viewOrderProofs({{ $order->id }})"
+                                            <button wire:click="viewOrderProofs('{{ $order->id }}')"
                                                 class="btn btn-sm btn-info" title="View Proofs">
                                                 <i class="bi bi-eye"></i>
                                             </button>
-                                            <button wire:click="edit({{ $order->id }})"
+                                            <button wire:click="edit('{{ $order->id }}')"
                                                 class="btn btn-sm btn-primary" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </button>

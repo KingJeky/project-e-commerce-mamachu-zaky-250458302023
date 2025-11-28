@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\HasUuid;
 
 class Address extends Model
 {
+    use HasUuid;
+
     protected $fillable = [
         'user_id',
         'label',
@@ -30,7 +33,7 @@ class Address extends Model
         static::saving(function ($address) {
             if ($address->is_default) {
                 static::where('user_id', $address->user_id)
-                    ->where('id', '!=', $address->id)
+                    ->where('id', '!=', $address->id ?? '')
                     ->update(['is_default' => false]);
             }
         });

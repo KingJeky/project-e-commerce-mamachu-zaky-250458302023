@@ -147,7 +147,7 @@
                             <div class="mt-auto pt-4 flex items-center justify-between">
                                 <span class="text-lg font-bold text-gray-900">Rp
                                     {{ number_format($product->price, 0, ',', '.') }}</span>
-                                <button wire:click="addToCart({{ $product->id }})"
+                                <button wire:click="addToCart('{{ $product->id }}')"
                                     class="w-10 h-10 rounded-full bg-red-50 text-pop-primary flex items-center justify-center hover:bg-pop-primary hover:text-white transition">
                                     <i class="fa-solid fa-cart-plus"></i>
                                 </button>

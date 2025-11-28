@@ -55,7 +55,7 @@
                                     <td>{{ $user->created_at->format('d F Y') }}</td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <button wire:click="edit({{ $user->id }})" class="btn btn-sm btn-info"
+                                            <button wire:click="edit('{{ $user->id }}')" class="btn btn-sm btn-info"
                                                 title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
@@ -71,7 +71,7 @@
                                                         confirmButtonText: 'Ya, hapus!'
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            $wire.delete({{ $user->id }});
+                                                            $wire.delete('{{ $user->id }}');
                                                         }
                                                     });
                                                 ">

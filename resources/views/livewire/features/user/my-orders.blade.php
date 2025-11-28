@@ -168,6 +168,13 @@
                                                     <i class="fa-solid fa-credit-card mr-2"></i>
                                                     Bayar dengan Midtrans
                                                 </a>
+
+                                                {{-- Manual Confirm Payment Button for localhost/testing --}}
+                                                <button wire:click="manualConfirmPayment('{{ $order->id }}')"
+                                                    class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
+                                                    <i class="fa-solid fa-check-circle mr-2"></i>
+                                                    Konfirmasi Sudah Bayar
+                                                </button>
                                             @else
                                                 {{-- Transfer Bank Payment --}}
                                                 <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
@@ -180,7 +187,7 @@
 
                                         {{-- Cancel Order Button (only for new orders with pending payment) --}}
                                         @if ($order->status == 'new' && $order->payment_status == 'pending')
-                                            <button onclick="confirmCancelOrder({{ $order->id }})"
+                                            <button onclick="confirmCancelOrder('{{ $order->id }}')"
                                                 class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 py-3 rounded-full font-bold transition">
                                                 <i class="fa-solid fa-times-circle mr-2"></i>
                                                 Batalkan Pesanan
@@ -189,7 +196,7 @@
 
                                         {{-- Confirm Delivery Button (for delivered orders) --}}
                                         @if ($order->status == 'delivered' && $order->payment_status == 'paid' && !$order->receipt_proof)
-                                            <button wire:click="confirmDelivery({{ $order->id }})"
+                                            <button wire:click="confirmDelivery('{{ $order->id }}')"
                                                 class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
                                                 <i class="fa-solid fa-check-circle mr-2"></i>
                                                 Pesanan Diterima

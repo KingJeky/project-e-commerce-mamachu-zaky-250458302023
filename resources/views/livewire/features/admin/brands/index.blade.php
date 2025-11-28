@@ -64,7 +64,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <button wire:click="edit({{ $brand->id }})" class="btn btn-sm btn-info"
+                                            <button wire:click="edit('{{ $brand->id }}')" class="btn btn-sm btn-info"
                                                 title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
@@ -80,7 +80,7 @@
                                                     confirmButtonText: 'Ya, hapus!'
                                                 }).then((result) => {
                                                     if (result.isConfirmed) {
-                                                        $wire.delete({{ $brand->id }});
+                                                        $wire.delete('{{ $brand->id }}');
                                                     }
                                                 });
                                             ">

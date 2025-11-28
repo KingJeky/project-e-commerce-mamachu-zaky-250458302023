@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Traits\HasUuid;
 
 class CartItem extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuid;
 
     protected $fillable = ['cart_id', 'product_id', 'quantity'];
 

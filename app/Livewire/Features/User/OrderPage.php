@@ -106,12 +106,7 @@ class OrderPage extends Component
             'notes' => $this->notes,
         ]);
         
-        // Generate Midtrans Snap Token if using Midtrans
-        if ($this->paymentMethod == 'midtrans') {
-            $this->generateSnapToken($order);
-        }
-        
-        // Create order items from cart items
+        // Create order items from cart items FIRST before generating snap token
         foreach ($this->cartItems as $cartItem) {
             OrderItem::create([
                 'order_id' => $order->id,
@@ -122,19 +117,25 @@ class OrderPage extends Component
             ]);
         }
         
+        // Reload order with items relationship for Midtrans token generation
+        if ($this->paymentMethod == 'midtrans') {
+            $order->load('items.product');
+            $this->generateSnapToken($order);
+        }
+        
         // Clear cart
         CartItem::where('cart_id', $this->cart->id)->delete();
         
         // Dispatch event to update cart counter
         $this->dispatch('cartUpdated')->to('components.cart-counter');
         
-        // Flash success message
-        session()->flash('success', 'Pesanan berhasil dibuat! Order ID: #' . $order->id);
-        
         // Redirect based on payment method
         if ($this->paymentMethod == 'midtrans') {
+            // For Midtrans, don't show success flash - user will be redirected to payment page
             return redirect()->route('user.midtrans-payment', ['orderId' => $order->id]);
         } else {
+            // For transfer, show success message
+            session()->flash('success', 'Pesanan berhasil dibuat! Order ID: #' . $order->id);
             return redirect()->route('user.my-orders');
         }
     }

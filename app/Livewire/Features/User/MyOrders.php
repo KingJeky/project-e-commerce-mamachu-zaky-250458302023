@@ -20,7 +20,9 @@ class MyOrders extends Component
         $this->loadOrders();
         
         // Check if user just returned from Midtrans payment
-        $paidOrderId = request()->query('paid_order');
+        // Support both 'paid_order' and 'check_payment' parameters for compatibility
+        $paidOrderId = request()->query('paid_order') ?? request()->query('check_payment');
+        
         if ($paidOrderId) {
             \Log::info("User returned from Midtrans payment", ['order_id' => $paidOrderId]);
             
@@ -390,6 +392,61 @@ class MyOrders extends Component
             }
         } catch (\Exception $e) {
             \Log::error("Manual check payment status error", [
+                'order_id' => $orderId,
+                'error' => $e->getMessage()
+            ]);
+            
+            $this->dispatch('swal:error', [
+                'title' => 'Error!',
+                'text' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Manual confirmation for localhost/sandbox testing
+     * Use this when Midtrans API is not accessible from localhost
+     */
+    public function manualConfirmPayment($orderId)
+    {
+        try {
+            $order = Order::where('id', $orderId)
+                ->where('user_id', auth()->id())
+                ->first();
+
+            if (!$order) {
+                $this->dispatch('swal:error', [
+                    'title' => 'Gagal!',
+                    'text' => 'Order tidak ditemukan'
+                ]);
+                return;
+            }
+
+            // Only allow for pending Midtrans payments
+            if ($order->payment_method != 'midtrans' || $order->payment_status != 'pending') {
+                $this->dispatch('swal:error', [
+                    'title' => 'Tidak Dapat Dikonfirmasi!',
+                    'text' => 'Order ini tidak dapat dikonfirmasi manual'
+                ]);
+                return;
+            }
+
+            // Update status to paid
+            $order->update([
+                'payment_status' => 'paid',
+                'status' => 'processing'
+            ]);
+
+            // Reload orders
+            $this->loadOrders();
+
+            $this->dispatch('swal:success', [
+                'title' => 'Berhasil!',
+                'text' => 'Pembayaran berhasil dikonfirmasi!'
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error("Manual confirm payment error", [
                 'order_id' => $orderId,
                 'error' => $e->getMessage()
             ]);

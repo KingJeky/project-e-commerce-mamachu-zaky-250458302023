@@ -139,7 +139,7 @@
                                     <td>{{ $products->firstItem() + $index }}</td>
                                     <td>
                                         @if ($product->images && !empty($product->images))
-                                            <button wire:click="viewImages({{ $product->id }})"
+                                            <button wire:click="viewImages('{{ $product->id }}')"
                                                 class="btn btn-sm btn-outline-primary">View Images</button>
                                         @else
                                             <span class="text-muted">No Image</span>
@@ -149,15 +149,15 @@
                                     <td>{{ $product->category->name ?? 'N/A' }}</td>
                                     <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                                     <td>
-                                        <button wire:click="viewStatus({{ $product->id }})"
+                                        <button wire:click="viewStatus('{{ $product->id }}')"
                                             class="btn btn-sm btn-outline-info">
                                             View Status
                                         </button>
                                     </td>
                                     <td>
                                         <div class="d-flex gap-1">
-                                            <button wire:click="edit({{ $product->id }})" class="btn btn-sm btn-info"
-                                                title="Edit">
+                                            <button wire:click="edit('{{ $product->id }}')"
+                                                class="btn btn-sm btn-info" title="Edit">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
                                             <button class="btn btn-sm btn-danger" title="Delete" x-data
@@ -172,7 +172,7 @@
                                                     confirmButtonText: 'Ya, hapus!'
                                                 }).then((result) => {
                                                     if (result.isConfirmed) {
-                                                        $wire.delete({{ $product->id }});
+                                                        $wire.delete('{{ $product->id }}');
                                                     }
                                                 });
                                             ">
