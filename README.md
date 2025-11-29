@@ -1,59 +1,455 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🥤 Mamachu - E-Commerce Minuman
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Segarkan Harimu!** Platform e-commerce minuman modern dengan integrasi pembayaran Midtrans.
 
-## About Laravel
+![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Livewire](https://img.shields.io/badge/Livewire-3.6-4E56A6?style=for-the-badge&logo=livewire&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.2-777BB4?style=for-the-badge&logo=php&logoColor=white)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📋 Daftar Isi
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Tentang Project](#-tentang-project)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [Payment Integration](#-payment-integration)
+- [Project Structure](#-project-structure)
+- [Screenshots](#-screenshots)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Tentang Project
 
-## Learning Laravel
+**Mamachu** adalah platform e-commerce yang dikembangkan menggunakan Laravel 12 dan Livewire 3, dikhususkan untuk penjualan berbagai jenis minuman. Project ini dilengkapi dengan sistem pembayaran terintegrasi menggunakan Midtrans, manajemen produk, keranjang belanja, dan fitur pemesanan yang lengkap.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Kenapa Mamachu?
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- 🚀 **Modern Stack**: Dibangun dengan Laravel 12, Livewire 3, dan TailwindCSS
+- 💳 **Payment Gateway**: Terintegrasi dengan Midtrans untuk pembayaran yang aman
+- 📱 **Responsive Design**: Mobile-first design yang cantik dan user-friendly
+- ⚡ **Real-time**: Menggunakan Livewire untuk interaksi real-time tanpa reload
+- 🎨 **Beautiful UI**: Desain modern dengan animasi smooth dan warna yang eye-catching
 
-## Laravel Sponsors
+## ✨ Features
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### For Customers (User)
+- 🏠 **Homepage** dengan produk featured dan promosi
+- 🔍 **Browse Products** berdasarkan kategori dan brand
+- 🛒 **Shopping Cart** dengan update real-time
+- 📦 **Order Management** dengan tracking status  
+- 💰 **Multiple Payment Methods**:
+  - Transfer Bank dengan upload bukti pembayaran
+  - Midtrans (DANA, GoPay, Credit Card, VA, QRIS, dll)
+- 📍 **Address Management** untuk pengiriman
+- 👤 **User Profile** management
+- ✅ **Auto Payment Status Update** setelah pembayaran Midtrans berhasil
 
-### Premium Partners
+### For Admin
+- 📊 **Dashboard** dengan statistics
+- 🏷️ **Product Management** (CRUD)
+- 📂 **Category Management**
+- 🏢 **Brand Management**
+- 👥 **User Management** dengan role-based access
+- 📋 **Order Management** dengan update status
+- 🖼️ **Image Upload** untuk produk dengan multiple images
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🛠️ Tech Stack
 
-## Contributing
+### Backend
+- **Framework**: Laravel 12.0
+- **PHP**: 8.2+
+- **Database**: SQLite (default) / MySQL
+- **ORM**: Eloquent
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Frontend
+- **UI Framework**: Livewire 3.6
+- **CSS**: TailwindCSS 3.0
+- **Icons**: Font Awesome 6.4
+- **Animations**: CSS Animations & Transitions
+- **Forms**: SweetAlert2 untuk notifications
 
-## Code of Conduct
+### Third-party Services
+- **Payment Gateway**: Midtrans (Sandbox & Production)
+- **Image Storage**: Laravel File Storage (Public disk)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 📦 Prerequisites
 
-## Security Vulnerabilities
+Pastikan sistem Anda sudah memiliki:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **PHP** >= 8.2
+- **Composer** >= 2.0
+- **Node.js** >= 18.x
+- **NPM** >= 9.x
+- **SQLite** atau **MySQL** (optional)
+- **Git**
 
-## License
+## 🚀 Installation
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/yourusername/mamachu.git
+cd mamachu
+```
+
+### 2. Install Dependencies
+
+```bash
+# Install PHP dependencies
+composer install
+
+# Install Node dependencies
+npm install
+```
+
+### 3. Environment Setup
+
+```bash
+# Copy environment file
+cp .env.example .env
+
+# Generate application key
+php artisan key:generate
+```
+
+### 4. Database Setup
+
+```bash
+# Create SQLite database (if using SQLite)
+touch database/database.sqlite
+
+# Run migrations
+php artisan migrate
+
+# (Optional) Seed database with sample data
+php artisan db:seed
+```
+
+### 5. Storage Link
+
+```bash
+# Create symbolic link for file uploads
+php artisan storage:link
+```
+
+### 6. Build Assets
+
+```bash
+# For development
+npm run dev
+
+# For production
+npm run build
+```
+
+## ⚙️ Configuration
+
+### Database Configuration
+
+Edit file `.env` untuk database configuration:
+
+**SQLite (Default)**:
+```env
+DB_CONNECTION=sqlite
+# DB_DATABASE akan auto-detect database/database.sqlite
+```
+
+**MySQL** (Alternative):
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mamachu
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### Midtrans Configuration
+
+1. **Daftar di Midtrans**: 
+   - Sandbox: https://dashboard.sandbox.midtrans.com/
+   - Production: https://dashboard.midtrans.com/
+
+2. **Dapatkan API Keys** dari dashboard Midtrans
+
+3. **Update `.env` file**:
+
+```env
+# Midtrans Configuration
+MIDTRANS_MERCHANT_ID=your_merchant_id
+MIDTRANS_CLIENT_KEY=your_client_key
+MIDTRANS_SERVER_KEY=your_server_key
+MIDTRANS_IS_PRODUCTION=false  # Set true for production
+MIDTRANS_IS_SANITIZED=true
+MIDTRANS_IS_3DS=true
+```
+
+4. **Clear config cache**:
+```bash
+php artisan config:clear
+php artisan cache:clear
+```
+
+## 🗄️ Database Setup
+
+### Migrations
+
+Project ini sudah include migrations untuk:
+- Users (with roles)
+- Categories
+- Brands
+- Products
+- Addresses
+- Carts & Cart Items
+- Orders & Order Items
+
+Run migrations:
+```bash
+php artisan migrate
+```
+
+### Seeders (Optional)
+
+Jika ingin populate database dengan sample data:
+
+```bash
+php artisan db:seed
+```
+
+## 🏃 Running the Application
+
+### Development Mode
+
+**Option 1: Using Laravel Artisan**
+```bash
+# Terminal 1 - Run Laravel server
+php artisan serve
+
+# Terminal 2 - Run Vite dev server
+npm run dev
+
+# Terminal 3 - Run queue worker (for background jobs)
+php artisan queue:work
+```
+
+**Option 2: Using Composer Script**
+```bash
+# Run all development servers concurrently
+composer run dev
+```
+
+Application akan berjalan di: `http://localhost:8000`
+
+### Production Mode
+
+```bash
+# Build assets
+npm run build
+
+# Optimize Laravel
+php artisan optimize
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+# Run with production server (e.g. Apache/Nginx)
+```
+
+## 💳 Payment Integration
+
+### Midtrans Payment Flow
+
+1. **User memilih produk** dan checkout
+2. **User pilih Midtrans** sebagai payment method
+3. **System generate Snap Token** dari Midtrans
+4. **Midtrans payment popup** terbuka
+5. **User menyelesaikan pembayaran** (DANA/GoPay/CC/etc)
+6. **Status otomatis update** ke "Dibayar" setelah payment success
+7. **Order masuk ke processing**
+
+### Webhook Configuration
+
+Untuk production, setup webhook URL di Midtrans Dashboard:
+
+**Notification URL**: `https://yourdomain.com/midtrans/callback`
+
+Webhook akan otomatis update payment status ketika:
+- Payment berhasil (settlement/capture)
+- Payment pending
+- Payment gagal/expire
+
+### Testing Payment (Sandbox)
+
+Gunakan test credentials dari [Midtrans Sandbox Documentation](https://docs.midtrans.com/en/technical-reference/sandbox-test):
+
+**Test Credit Card**:
+- Card Number: `4811 1111 1111 1114`
+- CVV: `123`
+- Exp: `01/25`
+
+**Test E-Wallet**:
+- Pilih DANA/GoPay
+- Akan muncul simulator payment
+- Klik "Success" untuk simulate successful payment
+
+## 📁 Project Structure
+
+```
+mamachu/
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   │   └── MidtransController.php    # Midtrans webhook & callbacks
+│   │   └── Middleware/
+│   │       └── CheckRole.php             # Role-based middleware
+│   ├── Livewire/
+│   │   └── Features/
+│   │       ├── Admin/                    # Admin components
+│   │       │   ├── Dashboard.php
+│   │       │   ├── Products/
+│   │       │   ├── Categories/
+│   │       │   ├── Brands/
+│   │       │   ├── Users/
+│   │       │   └── Orders/
+│   │       └── User/                     # User components
+│   │           ├── Main.php              # User main page
+│   │           ├── CartPage.php          # Shopping cart
+│   │           ├── OrderPage.php         # Checkout
+│   │           ├── MyOrders.php          # Order history
+│   │           ├── MidtransPayment.php   # Midtrans payment
+│   │           └── Addresses.php         # Address management
+│   └── Models/
+│       ├── User.php
+│       ├── Product.php
+│       ├── Category.php
+│       ├── Brand.php
+│       ├── Order.php
+│       ├── OrderItem.php
+│       ├── Cart.php
+│       └── Address.php
+├── config/
+│   └── midtrans.php                      # Midtrans config
+├── database/
+│   ├── migrations/
+│   └── seeders/
+├── public/
+│   └── storage/                          # Symlinked to storage/app/public
+├── resources/
+│   └── views/
+│       ├── components/
+│       │   └── layouts/                  # Main layouts
+│       └── livewire/                     # Livewire views
+├── routes/
+│   └── web.php                           # All routes defined here
+└── storage/
+    └── app/
+        └── public/                       # User uploads (images)
+```
+
+## 📸 Screenshots
+
+> **Note**: Add your screenshots here
+
+### User Interface
+- Homepage
+- Product Listing
+- Shopping Cart
+- Checkout Page
+- My Orders
+- Midtrans Payment
+
+### Admin Panel
+- Dashboard
+- Product Management
+- Order Management
+- User Management
+
+## 👥 Default Users
+
+Setelah seeding, Anda bisa login dengan:
+
+**Admin**:
+- Email: `admin@mamachu.com`
+- Password: `password`
+
+**User**:
+- Email: `user@mamachu.com`
+- Password: `password`
+
+> ⚠️ **Important**: Ganti password default di production!
+
+## 🧪 Testing
+
+Run tests dengan Pest:
+
+```bash
+# Run all tests
+php artisan test
+
+# Or using composer
+composer test
+
+# Run specific test file
+php artisan test tests/Feature/ProductTest.php
+```
+
+## 🐛 Troubleshooting
+
+### Issue: Midtrans Error 401
+
+**Solution**: 
+1. Pastikan API Keys di `.env` sudah benar
+2. Hubungi Midtrans Support jika akun belum activated
+3. Clear config: `php artisan config:clear`
+
+### Issue: Payment Status Tidak Auto-Update
+
+**Solution**:
+1. Clear all caches: `php artisan optimize:clear`
+2. Hard refresh browser (Ctrl+Shift+R)
+3. Check logs: `storage/logs/laravel.log`
+
+### Issue: Images Tidak Muncul
+
+**Solution**:
+1. Run: `php artisan storage:link`
+2. Pastikan folder `storage/app/public` exists
+3. Check file permissions
+
+## 🤝 Contributing
+
+Contributions are welcome! Silakan:
+
+1. Fork repository
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+- **Your Name** - [GitHub](https://github.com/yourusername)
+
+## 🙏 Acknowledgments
+
+- Laravel Team untuk framework yang luar biasa
+- Livewire Team untuk reactive components
+- Midtrans untuk payment gateway integration
+- TailwindCSS untuk utility-first CSS framework
+- Font Awesome untuk beautiful icons
+
+---
+
+<div align="center">
+  <p>Made with ❤️ and 🥤 by Mamachu Team</p>
+  <p>© 2024 Mamachu Inc. All rights reserved.</p>
+</div>
