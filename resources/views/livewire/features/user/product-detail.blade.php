@@ -226,7 +226,7 @@
             showImage(currentImageIndex);
         }
 
-        // Livewire event listener
+        // Livewire event listener and hooks
         document.addEventListener('livewire:init', () => {
             Livewire.on('swal:success', (event) => {
                 const {
@@ -240,6 +240,31 @@
                     timer: 2000,
                     showConfirmButton: false,
                 });
+            });
+
+            // Preserve slider state across Livewire updates
+            let savedSliderIndex = 0;
+
+            // Before Livewire updates the DOM, save the current slider position
+            Livewire.hook('commit', ({
+                component,
+                commit,
+                respond
+            }) => {
+                savedSliderIndex = currentImageIndex;
+            });
+
+            // After Livewire updates the DOM, restore the slider position
+            Livewire.hook('morph.updated', ({
+                el,
+                component
+            }) => {
+                // Small delay to ensure DOM is fully updated
+                setTimeout(() => {
+                    if (savedSliderIndex !== undefined && savedSliderIndex !== 0) {
+                        showImage(savedSliderIndex);
+                    }
+                }, 10);
             });
         });
     </script>

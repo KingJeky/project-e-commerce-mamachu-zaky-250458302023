@@ -87,7 +87,7 @@
                 <a href="{{ route('categories') }}" class="hover:text-pop-primary transition">Kategori</a>
                 <a href="{{ route('brands') }}" class="hover:text-pop-primary transition">Brand</a>
                 <a href="{{ route('featured') }}" class="hover:text-pop-primary transition">Unggulan</a>
-                <a href="#about" class="hover:text-pop-primary transition">Tentang</a>
+                <a href="{{ route('home') }}#about" class="hover:text-pop-primary transition">Tentang</a>
             </div>
 
             <div class="hidden md:flex items-center space-x-6">

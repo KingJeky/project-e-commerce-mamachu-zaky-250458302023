@@ -140,7 +140,7 @@
                                     <td>
                                         @if ($product->images && !empty($product->images))
                                             <button wire:click="viewImages('{{ $product->id }}')"
-                                                class="btn btn-sm btn-outline-primary">View Images</button>
+                                                class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></button>
                                         @else
                                             <span class="text-muted">No Image</span>
                                         @endif
@@ -151,7 +151,7 @@
                                     <td>
                                         <button wire:click="viewStatus('{{ $product->id }}')"
                                             class="btn btn-sm btn-outline-info">
-                                            View Status
+                                            <i class="bi bi-eye"></i>
                                         </button>
                                     </td>
                                     <td>

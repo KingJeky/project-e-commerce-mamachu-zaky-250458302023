@@ -45,7 +45,7 @@
                 <!-- Filter Harga -->
                 <div class="mb-6 border-b border-gray-100 pb-6" wire:ignore>
                     <label for="priceRange" class="block text-sm font-semibold mb-3">Maksimal Harga</label>
-                    <input type="range" id="priceRange" min="0" max="{{ $initialMaxPrice }}" step="5000"
+                    <input type="range" id="priceRange" min="0" max="{{ $initialMaxPrice }}" step="500"
                         value="{{ $maxPrice }}"
                         class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-pop-primary">
                     <div class="flex justify-between text-sm mt-2 font-medium text-gray-600">
