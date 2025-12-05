@@ -63,7 +63,7 @@
 ### Backend
 - **Framework**: Laravel 12.0
 - **PHP**: 8.2+
-- **Database**: SQLite (default) / MySQL
+- **Database**: MySQL
 - **ORM**: Eloquent
 
 ### Frontend
@@ -74,7 +74,7 @@
 - **Forms**: SweetAlert2 untuk notifications
 
 ### Third-party Services
-- **Payment Gateway**: Midtrans (Sandbox & Production)
+- **Payment Gateway**: Midtrans (Sandbox)
 - **Image Storage**: Laravel File Storage (Public disk)
 
 ## 📦 Prerequisites
@@ -85,7 +85,7 @@ Pastikan sistem Anda sudah memiliki:
 - **Composer** >= 2.0
 - **Node.js** >= 18.x
 - **NPM** >= 9.x
-- **SQLite** atau **MySQL** (optional)
+- **MySQL** 
 - **Git**
 
 ## 🚀 Installation
@@ -421,23 +421,10 @@ php artisan test tests/Feature/ProductTest.php
 2. Pastikan folder `storage/app/public` exists
 3. Check file permissions
 
-## 🤝 Contributing
-
-Contributions are welcome! Silakan:
-
-1. Fork repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
-- **Your Name** - [GitHub](https://github.com/yourusername)
+- **Zaky** - [GitHub](https://github.com/KingJeky)
 
 ## 🙏 Acknowledgments
 
