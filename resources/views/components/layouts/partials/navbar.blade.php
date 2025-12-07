@@ -1,16 +1,37 @@
-<nav class="navbar navbar-expand navbar-light navbar-top">
-    <div class="container-fluid">
-        <a href="#" class="burger-btn d-block d-lg-none">
-            <i class="bi bi-justify fs-3"></i>
+<nav class="navbar-top">
+    <div class="flex items-center justify-between">
+        <!-- Mobile Burger Button -->
+        <a href="#" class="burger-btn">
+            <i class="fa-solid fa-bars"></i>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-lg-0">
-            </ul>
-            
+        <!-- Page Title / Breadcrumb (Optional) -->
+        <div class="hidden md:block">
+            <h2 class="text-lg font-bold text-pop-dark">
+                @if (request()->routeIs('admin.dashboard'))
+                    Dashboard
+                @elseif(request()->routeIs('admin.categories*'))
+                    Kategori
+                @elseif(request()->routeIs('admin.brands*'))
+                    Brand
+                @elseif(request()->routeIs('admin.products*'))
+                    Produk
+                @elseif(request()->routeIs('admin.users*'))
+                    Users
+                @elseif(request()->routeIs('admin.orders*'))
+                    Orders
+                @else
+                    Admin Panel
+                @endif
+            </h2>
+        </div>
+
+        <!-- Right Side Elements (Optional - can add user dropdown, notifications, etc.) -->
+        <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-600 hidden sm:block">
+                <i class="fa-solid fa-user-circle text-pop-primary mr-1"></i>
+                {{ auth()->user()->name }}
+            </span>
+        </div>
     </div>
 </nav>

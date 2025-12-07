@@ -1,11 +1,11 @@
- <footer>
-     <div class="footer clearfix mb-0 text-muted">
-         <div class="float-start">
-             <p>2025 &copy; Mamachu</p>
-         </div>
-         <div class="float-end">
-             <p>Crafted with <span class="text-danger"><i class="bi bi-heart-fill icon-mid"></i></span>
-                 by <a href="https://tomorie.my.id">Jeky</a></p>
-         </div>
-     </div>
- </footer>
+<footer>
+    <div class="footer-content">
+        <div>
+            <span class="footer-brand">Mamachu</span> Admin Panel © 2025
+        </div>
+        <div>
+            Crafted with <i class="fa-solid fa-heart footer-heart mx-1"></i> by
+            <a href="https://tomorie.my.id" class="text-pop-primary hover:underline font-semibold" target="_blank">Jeky</a>
+        </div>
+    </div>
+</footer>
