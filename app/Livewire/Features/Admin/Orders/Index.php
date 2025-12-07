@@ -15,6 +15,8 @@ class Index extends Component
 
     protected $paginationTheme = 'bootstrap';
 
+    public bool $isOpen = false;
+
     #[Layout('components.layouts.admin')]
     public $search = '';
 
@@ -48,7 +50,7 @@ class Index extends Component
     {
         $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
         $this->is_edit_mode = false;
-        $this->dispatch('show-modal');
+        $this->isOpen = true;
     }
 
     public function store()
@@ -81,7 +83,7 @@ class Index extends Component
         }
 
         $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
-        $this->dispatch('hide-modal');
+        $this->isOpen = false;
     }
 
     public function edit($id)
@@ -94,8 +96,14 @@ class Index extends Component
             $this->payment_status = $order->payment_status;
             $this->grand_total = $order->grand_total;
             $this->is_edit_mode = true;
-            $this->dispatch('show-modal');
+            $this->isOpen = true;
         }
+    }
+
+    public function closeModal()
+    {
+        $this->isOpen = false;
+        $this->reset(['is_edit_mode', 'order_id', 'user_id', 'status', 'payment_status', 'grand_total']);
     }
 
     public function delete($id)
