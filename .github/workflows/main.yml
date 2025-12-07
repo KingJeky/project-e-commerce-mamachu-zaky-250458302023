@@ -26,11 +26,15 @@ jobs:
             **/.git*
             **/.git*/**
             **/node_modules/**
-            **/bootstrap/**
-            **/database/**
-            **/public/**
-            **/storage/**
-            **/stubs/**
-            **/tests/**
             **/vendor/**
-            **.env
+            **/storage/logs/**
+            **/storage/framework/cache/**
+            **/storage/framework/sessions/**
+            **/storage/framework/views/**
+            .env
+            .env.example
+            .editorconfig
+            .gitignore
+            .gitattributes
+            phpunit.xml
+            README.md
