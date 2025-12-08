@@ -159,22 +159,16 @@
 
                                     {{-- Action Buttons --}}
                                     <div class="flex flex-wrap gap-3">
-                                        {{-- Pay Now Button for Pending Payment --}}
                                         @if ($order->payment_status == 'pending')
+                                            {{-- PENDING PAYMENT: Show Pay & Cancel Buttons --}}
+
                                             @if ($order->payment_method == 'midtrans')
                                                 {{-- Midtrans Payment --}}
                                                 <a href="{{ route('user.midtrans-payment', ['orderId' => $order->id]) }}"
                                                     class="flex-1 bg-pop-primary hover:bg-red-500 text-white py-3 rounded-full font-bold text-center shadow-lg shadow-red-200 transition transform hover:-translate-y-1">
                                                     <i class="fa-solid fa-credit-card mr-2"></i>
-                                                    Bayar dengan Midtrans
+                                                    Bayar Sekarang
                                                 </a>
-
-                                                {{-- Manual Confirm Payment Button for localhost/testing --}}
-                                                <button wire:click="manualConfirmPayment('{{ $order->id }}')"
-                                                    class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
-                                                    <i class="fa-solid fa-check-circle mr-2"></i>
-                                                    Konfirmasi Sudah Bayar
-                                                </button>
                                             @else
                                                 {{-- Transfer Bank Payment --}}
                                                 <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
@@ -183,32 +177,47 @@
                                                     Upload Bukti Bayar
                                                 </a>
                                             @endif
-                                        @endif
 
-                                        {{-- Cancel Order Button (only for new orders with pending payment) --}}
-                                        @if ($order->status == 'new' && $order->payment_status == 'pending')
+                                            {{-- Cancel Order Button (always show for pending payment) --}}
                                             <button onclick="confirmCancelOrder('{{ $order->id }}')"
-                                                class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 py-3 rounded-full font-bold transition">
+                                                class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-full font-bold transition">
                                                 <i class="fa-solid fa-times-circle mr-2"></i>
                                                 Batalkan Pesanan
                                             </button>
-                                        @endif
+                                        @elseif ($order->payment_status == 'paid')
+                                            {{-- PAID: Show Confirm Receipt Button or Completed Status --}}
 
-                                        {{-- Confirm Delivery Button (for delivered orders) --}}
-                                        @if ($order->status == 'delivered' && $order->payment_status == 'paid' && !$order->receipt_proof)
-                                            <button wire:click="confirmDelivery('{{ $order->id }}')"
-                                                class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
-                                                <i class="fa-solid fa-check-circle mr-2"></i>
-                                                Pesanan Diterima
-                                            </button>
-                                        @endif
-
-                                        {{-- Show Receipt Confirmed (if already uploaded) --}}
-                                        @if ($order->receipt_proof)
+                                            @if ($order->receipt_proof)
+                                                {{-- Already confirmed --}}
+                                                <div
+                                                    class="flex-1 bg-green-50 border-2 border-green-500 text-green-700 py-3 px-6 rounded-full font-bold text-center">
+                                                    <i class="fa-solid fa-check-double mr-2"></i>
+                                                    Pesanan Sudah Dikonfirmasi
+                                                </div>
+                                            @else
+                                                {{-- Show confirm button based on order status --}}
+                                                @if ($order->status == 'delivered')
+                                                    {{-- Delivered: User can confirm receipt --}}
+                                                    <button wire:click="confirmDelivery('{{ $order->id }}')"
+                                                        class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
+                                                        <i class="fa-solid fa-box-check mr-2"></i>
+                                                        Konfirmasi Penerimaan Barang
+                                                    </button>
+                                                @else
+                                                    {{-- Processing/Shipped: Show status info --}}
+                                                    <div
+                                                        class="flex-1 bg-blue-50 border-2 border-blue-500 text-blue-700 py-3 px-6 rounded-full font-bold text-center">
+                                                        <i class="fa-solid fa-truck mr-2"></i>
+                                                        {{ $this->getStatusLabel($order->status) }}
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @else
+                                            {{-- FAILED/CANCELLED: Show status only --}}
                                             <div
-                                                class="flex-1 bg-green-50 border-2 border-green-500 text-green-700 py-3 px-6 rounded-full font-bold text-center">
-                                                <i class="fa-solid fa-check-double mr-2"></i>
-                                                Pesanan Sudah Dikonfirmasi
+                                                class="flex-1 bg-red-50 border-2 border-red-500 text-red-700 py-3 px-6 rounded-full font-bold text-center">
+                                                <i class="fa-solid fa-exclamation-circle mr-2"></i>
+                                                {{ $this->getPaymentStatusLabel($order->payment_status) }}
                                             </div>
                                         @endif
                                     </div>
