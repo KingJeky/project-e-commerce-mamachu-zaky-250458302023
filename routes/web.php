@@ -20,4 +20,14 @@ require __DIR__ . '/user.php';
 // Midtrans
 require __DIR__ . '/midtrans.php';
 
+// Fix Storage Link
+Route::get('/fix-storage', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        return 'Storage link created successfully!';
+    } catch (\Exception $e) {
+        return 'Error: ' . $e->getMessage();
+    }
+});
+
 
