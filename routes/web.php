@@ -21,43 +21,61 @@ require __DIR__ . '/user.php';
 require __DIR__ . '/midtrans.php';
 
 // Fix Storage Link
-// Fix Storage Link & Debug
+// Fix Storage Link & Update ENV
 Route::get('/fix-storage', function () {
     $target = storage_path('app/public');
     $link = public_path('storage');
-    
-    $output = "<h1>Storage Debug Info</h1>";
-    $output .= "<p><b>APP_URL:</b> " . env('APP_URL') . "</p>";
-    $output .= "<p><b>Target (Real Path):</b> " . $target . "</p>";
-    $output .= "<p><b>Link (Public Path):</b> " . $link . "</p>";
-    
+    $output = "<h1>Storage & ENV Auto-Fixer</h1>";
+
+    // 1. Check/Fix Symlink
     if (file_exists($link)) {
-        $output .= "<p>✅ Link exists.</p>";
-        if (is_link($link)) {
-            $output .= "<p>🔗 It is a symlink pointing to: " . readlink($link) . "</p>";
+        $output .= "<p>✅ Symlink storage sudah ada.</p>";
+    } else {
+        try {
+            symlink($target, $link);
+            $output .= "<p>✅ Sukses membuat symlink storage!</p>";
+        } catch (\Exception $e) {
+            $output .= "<p>❌ Gagal membuat symlink: " . $e->getMessage() . "</p>";
+        }
+    }
+
+    // 2. Fix APP_URL in .env
+    $envPath = base_path('.env');
+    $targetUrl = 'https://mamachu.tomorie.my.id';
+    
+    if (file_exists($envPath)) {
+        $envContent = file_get_contents($envPath);
+        
+        if (preg_match('/^APP_URL=(.*)$/m', $envContent, $matches)) {
+            $currentUrl = trim($matches[1]);
+            $output .= "<p>Current APP_URL: <b>" . $currentUrl . "</b></p>";
+            
+            if ($currentUrl !== $targetUrl) {
+                // Update .env file
+                $newEnvContent = preg_replace('/^APP_URL=.*$/m', 'APP_URL=' . $targetUrl, $envContent);
+                file_put_contents($envPath, $newEnvContent);
+                $output .= "<p>✅ BERHASIL mengubah APP_URL menjadi: <b>" . $targetUrl . "</b></p>";
+                
+                // Clear Config Cache
+                try {
+                    \Illuminate\Support\Facades\Artisan::call('config:clear');
+                    $output .= "<p>✅ Config cache dibersihkan.</p>";
+                } catch (\Exception $e) {
+                    $output .= "<p>⚠️ Gagal clear cache (tidak fatal): " . $e->getMessage() . "</p>";
+                }
+            } else {
+                $output .= "<p>✅ APP_URL sudah benar (tidak perlu diubah).</p>";
+            }
         } else {
-            $output .= "<p>❌ It is a DIRECTORY (not a link). This is bad.</p>";
+            $output .= "<p>❌ APP_URL tidak ditemukan di file .env</p>";
         }
     } else {
-        $output .= "<p>❌ Link does NOT exist.</p>";
+        $output .= "<p>❌ File .env tidak ditemukan.</p>";
     }
 
-    try {
-        // Force re-create
-        if (file_exists($link)) {
-             // Rename old one just in case (safer than delete for now)
-             rename($link, $link . '_backup_' . time());
-             $output .= "<p>🗑️ Existing link/folder moved to backup.</p>";
-        }
-        
-        // Attempt to link
-        symlink($target, $link);
-        $output .= "<p>✅ New symlink created successfully!</p>";
-        
-    } catch (\Exception $e) {
-        $output .= "<p>❌ Error creating symlink: " . $e->getMessage() . "</p>";
-    }
-
+    $output .= "<br><h3>Silakan refresh halaman website utama Anda sekarang!</h3>";
+    $output .= "<a href='/'>Kembali ke Home</a>";
+    
     return $output;
 });
 
