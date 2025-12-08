@@ -169,6 +169,13 @@
                                                     <i class="fa-solid fa-credit-card mr-2"></i>
                                                     Bayar Sekarang
                                                 </a>
+
+                                                {{-- Manual Confirm for Testing (Sandbox) --}}
+                                                <button wire:click="manualConfirmPayment('{{ $order->id }}')"
+                                                    class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-full font-bold shadow-lg shadow-green-200 transition transform hover:-translate-y-1">
+                                                    <i class="fa-solid fa-check-circle mr-2"></i>
+                                                    Konfirmasi Manual
+                                                </button>
                                             @else
                                                 {{-- Transfer Bank Payment --}}
                                                 <a href="{{ route('user.payment', ['orderId' => $order->id]) }}"
