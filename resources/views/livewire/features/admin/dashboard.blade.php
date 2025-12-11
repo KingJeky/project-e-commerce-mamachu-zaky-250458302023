@@ -136,25 +136,24 @@
                                         <span class="font-semibold text-gray-700">{{ $order->user->name }}</span>
                                     </td>
                                     <td class="py-4 px-4">
-                                        @if (strtolower($order->status) == 'paid')
-                                            <span
-                                                class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-bold inline-flex items-center">
-                                                <i class="fa-solid fa-circle-check mr-1"></i>
-                                                {{ ucfirst($order->status) }}
-                                            </span>
-                                        @elseif(strtolower($order->status) == 'pending')
-                                            <span
-                                                class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs font-bold inline-flex items-center">
-                                                <i class="fa-solid fa-clock mr-1"></i>
-                                                {{ ucfirst($order->status) }}
-                                            </span>
-                                        @else
-                                            <span
-                                                class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-bold inline-flex items-center">
-                                                <i class="fa-solid fa-circle-xmark mr-1"></i>
-                                                {{ ucfirst($order->status) }}
-                                            </span>
-                                        @endif
+                                        @php
+                                            $statusConfig = [
+                                                'new' => ['color' => 'blue', 'label' => 'New'],
+                                                'processing' => ['color' => 'purple', 'label' => 'Processing'],
+                                                'shipped' => ['color' => 'yellow', 'label' => 'Shipped'],
+                                                'delivered' => ['color' => 'green', 'label' => 'Delivered'],
+                                                'completed' => ['color' => 'green', 'label' => 'Completed'],
+                                                'cancelled' => ['color' => 'red', 'label' => 'Cancelled'],
+                                            ];
+                                            $status =
+                                                $statusConfig[strtolower($order->status ?? 'new')] ??
+                                                $statusConfig['new'];
+                                        @endphp
+                                        <span
+                                            class="bg-{{ $status['color'] }}-100 text-{{ $status['color'] }}-600 px-3 py-1 rounded-full text-xs font-bold inline-flex items-center">
+                                            <i class="fa-solid fa-circle mr-1"></i>
+                                            {{ $status['label'] }}
+                                        </span>
                                     </td>
                                     <td class="py-4 px-4">
                                         <span class="font-bold text-pop-primary">
