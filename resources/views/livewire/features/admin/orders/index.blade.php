@@ -90,6 +90,7 @@
                                                     'processing' => ['color' => 'purple', 'label' => 'Processing'],
                                                     'shipped' => ['color' => 'yellow', 'label' => 'Shipped'],
                                                     'delivered' => ['color' => 'green', 'label' => 'Delivered'],
+                                                    'completed' => ['color' => 'green', 'label' => 'Completed'],
                                                     'cancelled' => ['color' => 'red', 'label' => 'Cancelled'],
                                                 ];
                                                 $status =
